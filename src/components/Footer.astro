@@ -1,5 +1,5 @@
 ---
-import { GITHUB_URL, SITE_TITLE } from '../consts';
+import { GITHUB_URL, LINKEDIN_URL, SITE_TITLE } from '../consts';
 const year = new Date().getFullYear();
 ---
 
@@ -7,6 +7,7 @@ const year = new Date().getFullYear();
 	<p>&copy; {year} {SITE_TITLE}</p>
 	<ul>
 		<li><a href="mailto:hello@wgwoods.co.uk">Email</a></li>
+		<li><a href={LINKEDIN_URL} rel="me noopener" target="_blank">LinkedIn</a></li>
 		<li><a href={GITHUB_URL} rel="me noopener" target="_blank">GitHub</a></li>
 		<li><a href="/rss.xml">RSS feed</a></li>
 	</ul>

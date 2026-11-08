@@ -14,6 +14,8 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// Link to the original post, for posts brought over from Substack
+			originalUrl: z.string().url().optional(),
 		}),
 });
 

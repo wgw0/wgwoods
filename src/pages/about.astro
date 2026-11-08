@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { LINKEDIN_URL, SITE_TITLE } from '../consts';
 import Base from '../layouts/Base.astro';
 ---
 
@@ -7,14 +7,18 @@ import Base from '../layouts/Base.astro';
 	<h1>About</h1>
 	<div class="prose">
 		<p>
-			I'm Will Woods. I work in analytics, making sure the data companies collect about their
-			websites is accurate and actually useful.
+			I'm Will Woods. I write about organisations, people and how they change, with a lens on
+			defence and security.
 		</p>
 		<p>
-			Outside of that I spend a lot of time with AI tools, working out where they genuinely help
-			and where they don't. This site is where I write that up and keep the things I build.
+			I've advised the MoD and spoken on organisational culture, and I'm interested in what makes
+			transformation stick amid geopolitics and procurement. This site is where I keep my writing
+			and the things I build.
 		</p>
-		<p>The easiest way to reach me is <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a>.</p>
+		<p>
+			You can reach me at <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a> or on
+			<a href={LINKEDIN_URL}>LinkedIn</a>.
+		</p>
 	</div>
 </Base>
 

@@ -5,7 +5,8 @@ Built using principles from Anthropic's frontend-design skill, Impeccable and Ta
 
 ## Brief
 
-- **Who:** Will Woods. Writes about AI and analytics, and builds small tools and apps.
+- **Who:** Will Woods. Writes about organisations, people and how they change, with a lens on
+  defence and security. Also builds small tools and apps.
 - **Feel:** calm and readable. The writing comes first.
 - **Modes:** the blog is for reading; projects are a showcase; the home page introduces both.
 
@@ -49,9 +50,9 @@ monospace used for decoration, fade-in-on-scroll, invented stats or testimonials
 ```
 Will Woods                          Writing  Projects  About
 
-I write about AI, analytics,
-and the small tools I build
-along the way.                      (serif, large)
+I write about organisations,
+people, and how they
+change.                             (serif, large)
 
 Short intro paragraph
 
