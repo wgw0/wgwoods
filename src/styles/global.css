@@ -217,7 +217,7 @@ time {
 	font-style: italic;
 }
 .prose img {
-	border-radius: 8px;
+	border-radius: 16px;
 }
 .prose hr {
 	border: 0;
