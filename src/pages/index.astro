@@ -1,9 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import PostList from '../components/PostList.astro';
-import ProjectList from '../components/ProjectList.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { projects } from '../data/projects';
 import Base from '../layouts/Base.astro';
 
 const posts = (await getCollection('blog'))
@@ -28,13 +26,6 @@ const posts = (await getCollection('blog'))
 		<PostList posts={posts} />
 	</section>
 
-	<section aria-labelledby="projects">
-		<div class="section-head">
-			<h2 id="projects">Projects</h2>
-			<a href="/projects">All projects</a>
-		</div>
-		<ProjectList projects={projects.slice(0, 3)} />
-	</section>
 </Base>
 
 <style>
