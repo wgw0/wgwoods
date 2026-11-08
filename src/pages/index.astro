@@ -1,110 +1,78 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import PostList from '../components/PostList.astro';
+import ProjectList from '../components/ProjectList.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { projects } from '../data/projects';
+import Base from '../layouts/Base.astro';
 
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 5);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="intro">
-				<h1>Hi, I'm Will.</h1>
-				<p>
-					This is my corner of the internet, where I write and share the things I make.
-				</p>
-			</section>
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<section class="intro">
+		<h1>I write about AI, analytics, and the small tools I build along the way.</h1>
+		<p>
+			I'm Will Woods. By day I work on measurement and tracking; the rest of the time I'm testing
+			what AI can actually do and writing down what I find.
+		</p>
+	</section>
 
-			<section>
-				<div class="section-head">
-					<h2>Latest writing</h2>
-					<a href="/blog">All posts →</a>
-				</div>
-				<ul class="posts">
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-								<span class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</span>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+	<section aria-labelledby="writing">
+		<div class="section-head">
+			<h2 id="writing">Writing</h2>
+			<a href="/blog">All writing</a>
+		</div>
+		<PostList posts={posts} />
+	</section>
 
-			<section>
-				<div class="section-head">
-					<h2>Projects</h2>
-					<a href="/projects">All projects →</a>
-				</div>
-				<div class="grid">
-					{projects.slice(0, 4).map((project) => <ProjectCard project={project} />)}
-				</div>
-			</section>
-		</main>
-		<Footer />
-		<style>
-			.intro {
-				margin-bottom: 3rem;
-			}
-			.intro p {
-				font-size: 1.25rem;
-				color: rgb(var(--gray-dark));
-			}
-			section {
-				margin-bottom: 3rem;
-			}
-			.section-head {
-				display: flex;
-				align-items: baseline;
-				justify-content: space-between;
-				gap: 1rem;
-			}
-			.section-head h2 {
-				margin: 0;
-				font-size: 1.6rem;
-			}
-			.posts {
-				list-style: none;
-				padding: 0;
-				margin: 1rem 0 0;
-			}
-			.posts li {
-				display: flex;
-				justify-content: space-between;
-				gap: 1rem;
-				padding: 0.75rem 0;
-				border-bottom: 1px solid rgb(var(--gray-light));
-			}
-			.posts a {
-				text-decoration: none;
-				font-weight: 700;
-			}
-			.date {
-				color: rgb(var(--gray));
-				white-space: nowrap;
-			}
-			.grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-				gap: 1.25rem;
-				margin-top: 1rem;
-			}
-		</style>
-	</body>
-</html>
+	<section aria-labelledby="projects">
+		<div class="section-head">
+			<h2 id="projects">Projects</h2>
+			<a href="/projects">All projects</a>
+		</div>
+		<ProjectList projects={projects.slice(0, 3)} />
+	</section>
+</Base>
+
+<style>
+	.intro {
+		padding-block: var(--space-12) var(--space-16);
+		animation: arrive 800ms var(--ease-out) both;
+	}
+	.intro h1 {
+		font-family: var(--font-serif);
+		font-weight: 400;
+		font-size: var(--step-4);
+		line-height: 1.12;
+		letter-spacing: -0.02em;
+		max-width: 20ch;
+	}
+	.intro p {
+		margin-top: var(--space-6);
+		font-size: var(--step-1);
+		color: var(--ink-soft);
+		max-width: 52ch;
+	}
+	section + section {
+		margin-top: var(--space-16);
+	}
+	.section-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-4);
+		margin-bottom: var(--space-6);
+	}
+	.section-head a {
+		font-size: var(--step--1);
+	}
+	@keyframes arrive {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+	}
+</style>

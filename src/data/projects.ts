@@ -1,8 +1,8 @@
-// Your projects and apps. Add one by copying an entry below and filling it in.
-//   title:       the name shown on the card
-//   description: one or two sentences
-//   url:         where the button goes (e.g. https://planegame.wgwoods.co.uk)
-//   status:      optional label such as 'Live', 'In progress' or 'Prototype'
+// Projects and apps shown on the site. Add one by copying an entry and filling it in.
+//   title:       the project's name
+//   description: one or two plain sentences on what it does
+//   url:         optional, where the title links to (e.g. https://planegame.wgwoods.co.uk)
+//   status:      optional short note such as 'In progress'
 
 export type Project = {
 	title: string;
@@ -13,9 +13,8 @@ export type Project = {
 
 export const projects: Project[] = [
 	{
-		title: 'This website',
-		description: 'My personal site, built with Astro and hosted on Cloudflare Pages.',
+		title: 'wgwoods.co.uk',
+		description: 'This site. Built with Astro, written in Markdown, and published by Cloudflare Pages on every push.',
 		url: 'https://github.com/wgw0/wgwoods',
-		status: 'Live',
 	},
 ];

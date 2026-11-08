@@ -1,14 +1,25 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import { SITE_TITLE } from '../consts';
+import Base from '../layouts/Base.astro';
 ---
 
-<Layout title="About me" description="A little about me." pubDate={new Date('2026-11-08')}>
-	<p>Hi, I'm Will Woods.</p>
-	<p>
-		I write about the things I'm thinking about and build small projects and apps along the way.
-		This site is where all of it lives.
-	</p>
-	<p>
-		You can get in touch at <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a>.
-	</p>
-</Layout>
+<Base title={`About | ${SITE_TITLE}`} description="A little about Will Woods.">
+	<h1>About</h1>
+	<div class="prose">
+		<p>
+			I'm Will Woods. I work in analytics, making sure the data companies collect about their
+			websites is accurate and actually useful.
+		</p>
+		<p>
+			Outside of that I spend a lot of time with AI tools, working out where they genuinely help
+			and where they don't. This site is where I write that up and keep the things I build.
+		</p>
+		<p>The easiest way to reach me is <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a>.</p>
+	</div>
+</Base>
+
+<style>
+	.prose {
+		margin-top: var(--space-8);
+	}
+</style>

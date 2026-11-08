@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+	dateFormat?: 'long' | 'short';
+}
+const { posts, dateFormat = 'long' } = Astro.props;
+---
+
+<ul class="posts">
+	{
+		posts.map((post) => (
+			<li>
+				<a href={`/blog/${post.id}/`}>
+					<span class="title">{post.data.title}</span>
+					<span class="description">{post.data.description}</span>
+				</a>
+				<FormattedDate date={post.data.pubDate} format={dateFormat} />
+			</li>
+		))
+	}
+</ul>
+<style>
+	.posts {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	li {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: var(--space-1) var(--space-6);
+		align-items: baseline;
+		padding-block: var(--space-4);
+		border-bottom: 1px solid var(--rule);
+	}
+	li:first-child {
+		border-top: 1px solid var(--rule);
+	}
+	a {
+		text-decoration: none;
+		display: grid;
+		gap: var(--space-1);
+	}
+	.title {
+		color: var(--ink);
+		font-weight: 600;
+		font-size: var(--step-1);
+		line-height: 1.35;
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-underline-offset: 0.2em;
+		transition: text-decoration-color 150ms var(--ease-out);
+	}
+	a:hover .title {
+		text-decoration-color: var(--pine);
+	}
+	.description {
+		color: var(--ink-soft);
+	}
+	time {
+		color: var(--ink-soft);
+		font-size: var(--step--1);
+		white-space: nowrap;
+	}
+	@media (max-width: 30rem) {
+		li {
+			grid-template-columns: 1fr;
+		}
+		time {
+			grid-row: 1;
+		}
+	}
+</style>
