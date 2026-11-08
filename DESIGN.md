@@ -67,5 +67,5 @@ Project name (link)
 One or two sentences
 
 ─────────────────────────────────────────────────────────
-© 2026 Will Woods                 Email  GitHub  RSS feed
+© 2026 Will Woods                 Email  LinkedIn  GitHub
 ```
