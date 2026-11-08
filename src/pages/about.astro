@@ -59,9 +59,12 @@ import Base from '../layouts/Base.astro';
 							{employer.location && <p class="meta">{employer.location}</p>}
 							<ol class="roles">
 								{employer.roles.map((role) => (
-									<li class="role">
+									<li class:list={['role', { current: !role.end }]}>
 										<div class="role-head">
-											<h4>{role.title}</h4>
+											<div>
+												<h4>{role.title}</h4>
+												{role.org && <p class="org">{role.org}</p>}
+											</div>
 											<p class="dates">
 												{role.start} – {role.end ?? 'Present'}
 											</p>
@@ -149,8 +152,16 @@ import Base from '../layouts/Base.astro';
 		background: var(--canvas);
 		border: 2px solid var(--gold);
 	}
-	.role:first-child::before {
+	.role.current::before {
 		background: var(--gold);
+	}
+	.org {
+		margin-top: var(--space-1);
+		color: var(--ink-soft);
+		font-size: var(--step--1);
+	}
+	.employer + .employer {
+		margin-top: var(--space-12);
 	}
 	.role-head {
 		display: flex;

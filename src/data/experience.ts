@@ -1,10 +1,12 @@
 // Work history shown on the About page, newest first.
 // Add a job by copying an employer block; add a promotion by adding a role at the top of `roles`.
 //   start / end: 'Mon YYYY'; leave `end` out for a current role
+//   org:         optional line under the role title (e.g. the client)
 //   points:      optional bullet points for the role
 
 export type Role = {
 	title: string;
+	org?: string;
 	start: string;
 	end?: string;
 	points?: string[];
@@ -39,6 +41,35 @@ export const experience: Employer[] = [
 				title: 'Technical Analyst',
 				start: 'Jan 2025',
 				end: 'Jun 2026',
+			},
+		],
+	},
+	{
+		name: 'BSc (Hons) Software Engineering [First Class]',
+		location: 'University of Portsmouth',
+		roles: [
+			{
+				title: 'Consulting Engagement – Ministry of Defence',
+				org: 'Defence Intelligence Training Group',
+				start: 'Sep 2023',
+				end: 'Dec 2023',
+				points: [
+					'Led a team of six to advise the Defence School of Intelligence, coordinating research, workshops and analysis to address a defined organisational challenge.',
+					'Conducted discovery with MoD personnel, civil servants and contractors to gather contextual insights and validate the problem statement.',
+					'Assessed implementation considerations including risks, dependencies and adoption factors to support practical delivery.',
+					'Delivered a report outlining the proposed solution, implementation approach and supporting rationale, including benefits, risks and adoption considerations.',
+				],
+			},
+			{
+				title: 'Business Systems Analysis Project – Ophthalmic Manufacturing Company',
+				start: 'Jan 2023',
+				end: 'Jun 2023',
+				points: [
+					'Engaged with a Director at a manufacturing company to produce a report on their operating model, combining qualitative data and process mapping to highlight organisational bottlenecks.',
+					'Conducted business analysis and operational assessments, applying SWOT and workflow analysis to evaluate efficiency and alignment with company objectives.',
+					'Identified operational inefficiencies such as delays in procurement approvals, and proposed evidence-based solutions to improve turnaround times.',
+					'Delivered findings in a final report and presentation to leadership, highlighting operational inefficiencies and recommended solutions.',
+				],
 			},
 		],
 	},
