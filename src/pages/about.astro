@@ -2,18 +2,19 @@
 import { Image } from 'astro:assets';
 import portrait from '../assets/portrait.jpg';
 import { LINKEDIN_URL, SITE_TITLE } from '../consts';
+import { experience } from '../data/experience';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base
 	title={`About | ${SITE_TITLE}`}
-	description="Will Woods: Senior Analyst at Hookflash, writing on organisations, people and change in defence and security."
+	description="William Woods: Senior Analyst at Hookflash, writing on organisations, people and change in defence and security."
 >
 	<div class="about">
 		<Image
 			class="portrait"
 			src={portrait}
-			alt="Will Woods"
+			alt="William Woods"
 			widths={[400, 800]}
 			sizes="(max-width: 52rem) 60vw, 10rem"
 			loading="eager"
@@ -22,7 +23,7 @@ import Base from '../layouts/Base.astro';
 			<h1>About</h1>
 			<div class="prose">
 				<p>
-					I'm Will Woods, a Senior Analyst at Hookflash. I support organisations through technology,
+					I'm William Woods, a Senior Analyst at Hookflash. I support organisations through technology,
 					analytics and advisory projects, helping teams improve performance, solve complex problems
 					and make better-informed decisions.
 				</p>
@@ -48,6 +49,37 @@ import Base from '../layouts/Base.astro';
 					You can reach me at <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a> or on <a href={LINKEDIN_URL}>LinkedIn</a>.
 				</p>
 			</div>
+
+			<section class="experience" aria-labelledby="experience-heading">
+				<h2 id="experience-heading">Experience</h2>
+				{
+					experience.map((employer) => (
+						<div class="employer">
+							<h3>{employer.url ? <a href={employer.url}>{employer.name}</a> : employer.name}</h3>
+							{employer.location && <p class="meta">{employer.location}</p>}
+							<ol class="roles">
+								{employer.roles.map((role) => (
+									<li class="role">
+										<div class="role-head">
+											<h4>{role.title}</h4>
+											<p class="dates">
+												{role.start} – {role.end ?? 'Present'}
+											</p>
+										</div>
+										{role.points && (
+											<ul class="points">
+												{role.points.map((point) => (
+													<li>{point}</li>
+												))}
+											</ul>
+										)}
+									</li>
+								))}
+							</ol>
+						</div>
+					))
+				}
+			</section>
 		</div>
 	</div>
 </Base>
@@ -68,6 +100,85 @@ import Base from '../layouts/Base.astro';
 	}
 	.prose {
 		margin-top: var(--space-6);
+	}
+	.experience {
+		margin-top: var(--space-16, 4rem);
+		padding-top: var(--space-8);
+		border-top: 1px solid var(--rule);
+	}
+	.experience h2 {
+		font-size: var(--step-2, 1.5rem);
+	}
+	.employer {
+		margin-top: var(--space-6);
+	}
+	.employer h3 {
+		font-size: var(--step-1);
+	}
+	.employer h3 a {
+		color: var(--ink);
+		text-decoration: none;
+	}
+	.employer h3 a:hover {
+		color: var(--pine);
+	}
+	.meta {
+		margin-top: var(--space-1);
+		color: var(--ink-soft);
+		font-size: var(--step--1);
+	}
+	.roles {
+		list-style: none;
+		margin: var(--space-6) 0 0;
+		padding: 0 0 0 var(--space-6);
+		border-left: 2px solid var(--rule);
+		display: grid;
+		gap: var(--space-8);
+	}
+	.role {
+		position: relative;
+	}
+	.role::before {
+		content: '';
+		position: absolute;
+		left: calc(-1 * var(--space-6) - 6px);
+		top: 0.45em;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--canvas);
+		border: 2px solid var(--pine);
+	}
+	.role:first-child::before {
+		background: var(--pine);
+	}
+	.role-head {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 0 var(--space-4);
+	}
+	.role h4 {
+		font-size: var(--step-0, 1rem);
+		font-weight: 600;
+	}
+	.dates {
+		color: var(--ink-soft);
+		font-size: var(--step--1);
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.points {
+		margin: var(--space-3) 0 0;
+		padding-left: 1.1em;
+		max-width: var(--measure);
+		color: var(--ink-soft);
+		display: grid;
+		gap: var(--space-2);
+	}
+	.points li::marker {
+		color: var(--pine);
 	}
 	@media (min-width: 52rem) {
 		.about {

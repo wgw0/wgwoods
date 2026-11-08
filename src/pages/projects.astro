@@ -5,9 +5,9 @@ import { projects } from '../data/projects';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title={`Projects | ${SITE_TITLE}`} description="Games, tools and models I've built.">
+<Base title={`Projects | ${SITE_TITLE}`} description="Tools and models I've built." noindex>
 	<h1>Projects</h1>
-	<p class="lede">Games, tools and models I've built.</p>
+	<p class="lede">Tools and models I've built.</p>
 	<div class="list">
 		<ProjectList projects={projects} />
 	</div>

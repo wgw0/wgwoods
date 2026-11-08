@@ -5,7 +5,7 @@ Built using principles from Anthropic's frontend-design skill, Impeccable and Ta
 
 ## Brief
 
-- **Who:** Will Woods. Writes about organisations, people and how they change, with a lens on
+- **Who:** William Woods. Writes about organisations, people and how they change, with a lens on
   defence and security. Senior Analyst at Hookflash; Software Engineering graduate.
 - **Feel:** calm and readable. The writing comes first.
 - **Modes:** the blog is for reading; projects are a showcase; the home page introduces both.
@@ -48,7 +48,7 @@ monospace used for decoration, fade-in-on-scroll, invented stats or testimonials
 ## Layout
 
 ```
-Will Woods                          Writing  Projects  About
+William Woods                          Writing  About       
 
 I write about organisations,
 people, and how they
@@ -67,5 +67,5 @@ Project name (link)
 One or two sentences
 
 ─────────────────────────────────────────────────────────
-© 2026 Will Woods                 Email  LinkedIn  GitHub
+© 2026 William Woods                 Email  LinkedIn  GitHub
 ```
