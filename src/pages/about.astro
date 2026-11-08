@@ -1,29 +1,84 @@
 ---
+import { Image } from 'astro:assets';
+import portrait from '../assets/portrait.jpg';
 import { LINKEDIN_URL, SITE_TITLE } from '../consts';
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title={`About | ${SITE_TITLE}`} description="A little about Will Woods.">
-	<h1>About</h1>
-	<div class="prose">
-		<p>
-			I'm Will Woods. I write about organisations, people and how they change, with a lens on
-			defence and security.
-		</p>
-		<p>
-			I've advised the MoD and spoken on organisational culture, and I'm interested in what makes
-			transformation stick amid geopolitics and procurement. This site is where I keep my writing
-			and the things I build.
-		</p>
-		<p>
-			You can reach me at <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a> or on
-			<a href={LINKEDIN_URL}>LinkedIn</a>.
-		</p>
+<Base
+	title={`About | ${SITE_TITLE}`}
+	description="Will Woods: Senior Analyst at Hookflash, writing on organisations, people and change in defence and security."
+>
+	<div class="about">
+		<Image
+			class="portrait"
+			src={portrait}
+			alt="Will Woods"
+			widths={[400, 800]}
+			sizes="(max-width: 52rem) 60vw, 10rem"
+			loading="eager"
+		/>
+		<div>
+			<h1>About</h1>
+			<div class="prose">
+				<p>
+					I'm Will Woods, a Senior Analyst at Hookflash. I support organisations through technology,
+					analytics and advisory projects, helping teams improve performance, solve complex problems
+					and make better-informed decisions.
+				</p>
+				<p>
+					I've worked with government, private sector and non-profit clients on measurement,
+					implementation and consulting engagements. Much of the job is translating technical
+					challenges into practical outcomes, and keeping stakeholders, delivery teams and changing
+					requirements pointed in the same direction.
+				</p>
+				<p>
+					What interests me most is where technology, people and organisational change meet. I led a
+					consulting project with the Defence School of Intelligence, and I've presented research on
+					organisational culture at the <a href="https://lnkd.in/etVia-XS">ACCU Conference</a>. That's
+					the thread running through my writing here: what makes transformation stick, especially in
+					defence and security, amid geopolitics and procurement.
+				</p>
+				<p>
+					I studied Software Engineering at the University of Portsmouth and graduated with a First,
+					which gave me a grounding in systems thinking and delivering projects across technical and
+					organisational settings.
+				</p>
+				<p>
+					You can reach me at <a href="mailto:hello@wgwoods.co.uk">hello@wgwoods.co.uk</a> or on
+					<a href={LINKEDIN_URL}>LinkedIn</a>.
+				</p>
+			</div>
+		</div>
 	</div>
 </Base>
 
 <style>
+	.about {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--space-8);
+		padding-top: var(--space-8);
+	}
+	.portrait {
+		width: min(16rem, 60vw);
+		height: auto;
+		aspect-ratio: 4 / 5;
+		object-fit: cover;
+		border-radius: 8px;
+	}
 	.prose {
-		margin-top: var(--space-8);
+		margin-top: var(--space-6);
+	}
+	@media (min-width: 52rem) {
+		.about {
+			grid-template-columns: 10rem 1fr;
+			gap: var(--space-10, 2.5rem);
+			align-items: start;
+		}
+		.portrait {
+			width: 100%;
+			margin-top: var(--space-2);
+		}
 	}
 </style>

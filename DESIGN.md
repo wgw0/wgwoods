@@ -6,7 +6,7 @@ Built using principles from Anthropic's frontend-design skill, Impeccable and Ta
 ## Brief
 
 - **Who:** Will Woods. Writes about organisations, people and how they change, with a lens on
-  defence and security. Also builds small tools and apps.
+  defence and security. Senior Analyst at Hookflash; Software Engineering graduate.
 - **Feel:** calm and readable. The writing comes first.
 - **Modes:** the blog is for reading; projects are a showcase; the home page introduces both.
 
