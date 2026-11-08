@@ -1,0 +1,110 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { projects } from '../data/projects';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="intro">
+				<h1>Hi, I'm Will.</h1>
+				<p>
+					This is my corner of the internet, where I write and share the things I make.
+				</p>
+			</section>
+
+			<section>
+				<div class="section-head">
+					<h2>Latest writing</h2>
+					<a href="/blog">All posts →</a>
+				</div>
+				<ul class="posts">
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+								<span class="date">
+									<FormattedDate date={post.data.pubDate} />
+								</span>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<section>
+				<div class="section-head">
+					<h2>Projects</h2>
+					<a href="/projects">All projects →</a>
+				</div>
+				<div class="grid">
+					{projects.slice(0, 4).map((project) => <ProjectCard project={project} />)}
+				</div>
+			</section>
+		</main>
+		<Footer />
+		<style>
+			.intro {
+				margin-bottom: 3rem;
+			}
+			.intro p {
+				font-size: 1.25rem;
+				color: rgb(var(--gray-dark));
+			}
+			section {
+				margin-bottom: 3rem;
+			}
+			.section-head {
+				display: flex;
+				align-items: baseline;
+				justify-content: space-between;
+				gap: 1rem;
+			}
+			.section-head h2 {
+				margin: 0;
+				font-size: 1.6rem;
+			}
+			.posts {
+				list-style: none;
+				padding: 0;
+				margin: 1rem 0 0;
+			}
+			.posts li {
+				display: flex;
+				justify-content: space-between;
+				gap: 1rem;
+				padding: 0.75rem 0;
+				border-bottom: 1px solid rgb(var(--gray-light));
+			}
+			.posts a {
+				text-decoration: none;
+				font-weight: 700;
+			}
+			.date {
+				color: rgb(var(--gray));
+				white-space: nowrap;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+				gap: 1.25rem;
+				margin-top: 1rem;
+			}
+		</style>
+	</body>
+</html>
