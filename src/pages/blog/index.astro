@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
 import PostList from '../../components/PostList.astro';
-import { SITE_TITLE } from '../../consts';
+import { LINKEDIN_URL, SITE_TITLE } from '../../consts';
+import { linkedinPosts } from '../../data/linkedin';
 import Base from '../../layouts/Base.astro';
 
 const posts = (await getCollection('blog')).sort(
@@ -25,6 +27,29 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
 			</section>
 		))
 	}
+
+	<section class="linkedin" aria-labelledby="linkedin-heading">
+		<h2 id="linkedin-heading">On LinkedIn</h2>
+		<p class="note">
+			Shorter posts from <a href={`${LINKEDIN_URL}recent-activity/all/`}>my LinkedIn</a>.
+		</p>
+		<ol class="embeds">
+			{
+				linkedinPosts.map((post) => (
+					<li>
+						<FormattedDate date={new Date(post.date)} />
+						<iframe
+							src={`https://www.linkedin.com/embed/feed/update/${post.urn}?collapsed=1`}
+							height={post.height}
+							title="LinkedIn post by William Woods"
+							loading="lazy"
+							allowfullscreen
+						/>
+					</li>
+				))
+			}
+		</ol>
+	</section>
 </Base>
 
 <style>
@@ -40,5 +65,41 @@ const years = [...new Set(posts.map((post) => post.data.pubDate.getFullYear()))]
 		margin-bottom: var(--space-4);
 		color: var(--ink-soft);
 		font-size: var(--step-1);
+	}
+	.linkedin {
+		margin-top: var(--space-16);
+		padding-top: var(--space-8);
+		border-top: 1px solid var(--rule);
+	}
+	.linkedin h2 {
+		margin-bottom: 0;
+		color: var(--ink);
+		font-size: var(--step-2);
+	}
+	.note {
+		margin-top: var(--space-2);
+		color: var(--ink-soft);
+	}
+	.embeds {
+		list-style: none;
+		margin: var(--space-8) 0 0;
+		padding: 0;
+		display: grid;
+		gap: var(--space-10, 2.5rem);
+	}
+	.embeds time {
+		display: block;
+		margin-bottom: var(--space-2);
+		color: var(--ink-soft);
+		font-size: var(--step--1);
+		font-variant-numeric: tabular-nums;
+	}
+	iframe {
+		display: block;
+		width: 100%;
+		max-width: 504px;
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		background: #fff;
 	}
 </style>
