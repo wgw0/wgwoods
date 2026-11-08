@@ -1,12 +1,23 @@
 ---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
+import FormattedDate from '../components/FormattedDate.astro';
 import PostList from '../components/PostList.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import Base from '../layouts/Base.astro';
 
-const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 5);
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const [latest, ...rest] = posts;
+
+// The card uses the post's hero image, or failing that the first image in the post.
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/blog/**/*.{jpg,jpeg,png,webp}', {
+	eager: true,
+});
+const firstImagePath = latest.body?.match(/!\[[^\]]*\]\(\.\.\/\.\.\/assets\/([^)]+)\)/)?.[1];
+const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/${firstImagePath}`]?.default : undefined);
 ---
 
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -18,14 +29,36 @@ const posts = (await getCollection('blog'))
 		</p>
 	</section>
 
-	<section aria-labelledby="writing">
-		<div class="section-head">
-			<h2 id="writing">Writing</h2>
-			<a href="/blog">All writing</a>
-		</div>
-		<PostList posts={posts} />
+	<section aria-labelledby="latest">
+		<h2 id="latest" class="section-title">Latest briefing</h2>
+		<a class="briefing" href={`/blog/${latest.id}/`}>
+			{
+				cardImage && (
+					<Image
+						class="briefing-image"
+						src={cardImage}
+						alt=""
+						widths={[480, 960]}
+						sizes="(max-width: 46rem) 100vw, 46rem"
+						loading="eager"
+					/>
+				)
+			}
+			<div class="briefing-body">
+				<FormattedDate date={latest.data.pubDate} />
+				<h3>{latest.data.title}</h3>
+				<p>{latest.data.description}</p>
+			</div>
+		</a>
 	</section>
 
+	<section aria-labelledby="writing">
+		<div class="section-head">
+			<h2 id="writing" class="section-title">More writing</h2>
+			<a href="/blog">All writing</a>
+		</div>
+		<PostList posts={rest.slice(0, 4)} />
+	</section>
 </Base>
 
 <style>
@@ -34,12 +67,18 @@ const posts = (await getCollection('blog'))
 		animation: arrive 800ms var(--ease-out) both;
 	}
 	.intro h1 {
-		font-family: var(--font-serif);
-		font-weight: 400;
+		font-weight: 500;
 		font-size: var(--step-4);
 		line-height: 1.12;
-		letter-spacing: -0.02em;
 		max-width: 20ch;
+	}
+	.intro h1::after {
+		content: '';
+		display: block;
+		width: 3rem;
+		height: 2px;
+		margin-top: var(--space-6);
+		background: var(--gold);
 	}
 	.intro p {
 		margin-top: var(--space-6);
@@ -50,16 +89,64 @@ const posts = (await getCollection('blog'))
 	section + section {
 		margin-top: var(--space-16);
 	}
+	.section-title {
+		font-size: var(--step-2);
+		margin-bottom: var(--space-6);
+	}
 	.section-head {
 		display: flex;
 		align-items: baseline;
 		justify-content: space-between;
 		gap: var(--space-4);
-		margin-bottom: var(--space-6);
 	}
 	.section-head a {
 		font-size: var(--step--1);
 	}
+
+	.briefing {
+		display: block;
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--surface);
+		text-decoration: none;
+		color: var(--ink);
+		transition: border-color 200ms var(--ease-out);
+	}
+	.briefing:hover {
+		border-color: var(--gold);
+		color: var(--ink);
+	}
+	.briefing-image {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		object-position: center 85%; /* charts usually carry a title at the top; favour the body */
+		border-bottom: 1px solid var(--rule);
+	}
+	.briefing-body {
+		padding: var(--space-6);
+		border-top: 2px solid var(--gold);
+	}
+	.briefing time {
+		color: var(--ink-soft);
+	}
+	.briefing h3 {
+		margin-top: var(--space-2);
+		font-size: var(--step-3);
+		line-height: 1.15;
+	}
+	.briefing p {
+		margin-top: var(--space-3);
+		color: var(--ink-soft);
+		max-width: 60ch;
+	}
+	@media (min-width: 40rem) {
+		.briefing-body {
+			padding: var(--space-8);
+		}
+	}
+
 	@keyframes arrive {
 		from {
 			opacity: 0;

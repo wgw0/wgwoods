@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import { SUBSTACK_URL } from '../consts';
 import Base from './Base.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
@@ -10,6 +11,7 @@ const { title, description, pubDate, updatedDate, heroImage, originalUrl } = Ast
 ---
 
 <Base title={title} description={description}>
+	<div class="progress" aria-hidden="true"><span></span></div>
 	<article>
 		<header>
 			<h1>{title}</h1>
@@ -35,11 +37,86 @@ const { title, description, pubDate, updatedDate, heroImage, originalUrl } = Ast
 				</p>
 			)
 		}
+		<section class="subscribe" aria-labelledby="subscribe-heading">
+			<h2 id="subscribe-heading">Get new writing by email</h2>
+			<p>New posts go out through my Substack.</p>
+			<iframe
+				src={`${SUBSTACK_URL}/embed`}
+				title="Subscribe to William Woods on Substack"
+				height="320"
+				loading="lazy"
+				scrolling="no"
+			></iframe>
+		</section>
 		<p class="back"><a href="/blog">More writing</a></p>
 	</article>
 </Base>
 
+<script>
+	// Reading progress: fills the gold bar as the article is read.
+	const bar = document.querySelector<HTMLElement>('.progress span');
+	const article = document.querySelector('article .prose');
+	if (bar && article) {
+		let ticking = false;
+		const update = () => {
+			const rect = article.getBoundingClientRect();
+			const total = rect.height - window.innerHeight;
+			const read = total > 0 ? Math.min(Math.max(-rect.top / total, 0), 1) : 1;
+			bar.style.transform = `scaleX(${read})`;
+			ticking = false;
+		};
+		const onScroll = () => {
+			if (!ticking) {
+				ticking = true;
+				requestAnimationFrame(update);
+			}
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
+		update();
+	}
+</script>
+
 <style>
+	.progress {
+		position: fixed;
+		inset: 0 0 auto;
+		height: 3px;
+		z-index: 20;
+		pointer-events: none;
+	}
+	.progress span {
+		display: block;
+		height: 100%;
+		background: var(--gold);
+		transform: scaleX(0);
+		transform-origin: left;
+	}
+	.subscribe {
+		margin-top: var(--space-16);
+		padding: var(--space-8);
+		max-width: var(--measure);
+		background: var(--surface);
+		border: 1px solid var(--rule);
+		border-top: 2px solid var(--gold);
+		border-radius: 8px;
+	}
+	.subscribe h2 {
+		font-size: var(--step-2);
+	}
+	.subscribe p {
+		margin-top: var(--space-2);
+		color: var(--ink-soft);
+	}
+	.subscribe iframe {
+		display: block;
+		width: 100%;
+		max-width: 480px;
+		margin-top: var(--space-6);
+		border: 1px solid var(--rule);
+		border-radius: 8px;
+		background: #fff;
+	}
 	header {
 		padding-top: var(--space-8);
 		max-width: var(--measure);
@@ -50,7 +127,14 @@ const { title, description, pubDate, updatedDate, heroImage, originalUrl } = Ast
 	.meta {
 		margin-top: var(--space-4);
 		color: var(--ink-soft);
-		font-size: var(--step--1);
+	}
+	h1::after {
+		content: '';
+		display: block;
+		width: 3rem;
+		height: 2px;
+		margin-top: var(--space-6);
+		background: var(--gold);
 	}
 	.hero {
 		margin-top: var(--space-8);

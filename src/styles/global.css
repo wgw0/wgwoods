@@ -1,26 +1,29 @@
 /*
   Design tokens for wgwoods.co.uk. See DESIGN.md for the reasoning.
-  Colours are OKLCH. Light and dark follow the visitor's device setting.
+  White page, navy type, gold accent. Light and dark follow the visitor's device setting.
 */
 
 :root {
-	/* Colour roles */
-	--canvas: oklch(98.6% 0.004 165);
-	--surface: oklch(95.8% 0.008 165);
-	--ink: oklch(23% 0.018 170);
-	--ink-soft: oklch(45% 0.02 170);
-	--rule: oklch(88% 0.012 165);
-	--pine: oklch(44% 0.075 160);
-	--pine-strong: oklch(36% 0.07 160);
-	--selection: oklch(88% 0.06 160);
+	/* Colour roles: white page, navy type, gold accent */
+	--canvas: #ffffff;
+	--surface: #f8fafc;
+	--ink: #0f172a;
+	--ink-soft: #475569;
+	--rule: #e2e8f0;
+	--accent: #7f6420; /* bronze: gold that is safe for text on white */
+	--accent-strong: #5f4a17;
+	--gold: #c5a880; /* decorative only: rules, markers, bars */
+	--selection: #f1e6cc;
 
 	/* Type */
-	--font-sans: 'Hanken Grotesk Variable', 'Segoe UI', system-ui, sans-serif;
-	--font-serif: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+	--font-display: 'Playfair Display Variable', Georgia, 'Times New Roman', serif;
+	--font-sans: 'Inter Variable', 'Segoe UI', system-ui, sans-serif;
+	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
 
+	--step--2: 0.75rem;
 	--step--1: 0.875rem;
 	--step-0: 1rem;
-	--step-1: 1.1875rem;
+	--step-1: 1.125rem;
 	--step-2: 1.5rem;
 	--step-3: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
 	--step-4: clamp(2.25rem, 1.6rem + 2.8vw, 3.5rem);
@@ -32,11 +35,12 @@
 	--space-4: 1rem;
 	--space-6: 1.5rem;
 	--space-8: 2rem;
+	--space-10: 2.5rem;
 	--space-12: 3rem;
 	--space-16: 4rem;
 	--space-24: 6rem;
 
-	--measure: 66ch;
+	--measure: 68ch;
 	--page: 46rem;
 	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -45,14 +49,15 @@
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--canvas: oklch(20% 0.014 170);
-		--surface: oklch(24% 0.016 170);
-		--ink: oklch(93% 0.008 165);
-		--ink-soft: oklch(74% 0.015 165);
-		--rule: oklch(32% 0.016 170);
-		--pine: oklch(79% 0.085 160);
-		--pine-strong: oklch(86% 0.07 160);
-		--selection: oklch(40% 0.06 160);
+		--canvas: #0f172a;
+		--surface: #1e293b;
+		--ink: #f8fafc;
+		--ink-soft: #94a3b8;
+		--rule: #334155;
+		--accent: #d4af37;
+		--accent-strong: #e6c869;
+		--gold: #c5a880;
+		--selection: #3d3520;
 	}
 }
 
@@ -102,18 +107,19 @@ h1,
 h2,
 h3,
 h4 {
-	font-family: var(--font-sans);
-	font-weight: 650;
+	font-family: var(--font-display);
+	font-weight: 600;
 	line-height: 1.2;
-	letter-spacing: -0.02em;
+	letter-spacing: -0.005em;
 	text-wrap: balance;
 	margin: 0;
 }
 
 h1 {
 	font-size: var(--step-4);
-	letter-spacing: -0.03em;
-	line-height: 1.08;
+	font-weight: 600;
+	letter-spacing: -0.015em;
+	line-height: 1.1;
 }
 h2 {
 	font-size: var(--step-2);
@@ -128,20 +134,20 @@ p {
 }
 
 a {
-	color: var(--pine);
+	color: var(--ink);
 	text-decoration-line: underline;
 	text-decoration-thickness: 1px;
-	text-underline-offset: 0.2em;
-	text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+	text-underline-offset: 0.22em;
+	text-decoration-color: var(--gold);
 	transition: text-decoration-color 150ms var(--ease-out), color 150ms var(--ease-out);
 }
 a:hover {
-	color: var(--pine-strong);
+	color: var(--accent);
 	text-decoration-color: currentColor;
 }
 
 :focus-visible {
-	outline: 2px solid var(--pine);
+	outline: 2px solid var(--accent);
 	outline-offset: 3px;
 	border-radius: 2px;
 }
@@ -155,6 +161,14 @@ img {
 time,
 .numeric {
 	font-variant-numeric: tabular-nums;
+}
+
+/* Dates and small metadata: the technical, data-driven voice */
+.meta,
+time {
+	font-family: var(--font-mono);
+	font-size: var(--step--2);
+	letter-spacing: 0.02em;
 }
 
 .sr-only {
@@ -171,9 +185,9 @@ time,
 
 /* Long-form writing */
 .prose {
-	font-family: var(--font-serif);
+	font-family: var(--font-sans);
 	font-size: var(--step-1);
-	line-height: 1.7;
+	line-height: 1.75;
 	max-width: var(--measure);
 }
 .prose > * + * {
@@ -197,8 +211,9 @@ time,
 .prose blockquote {
 	margin-inline: 0;
 	padding-left: 1em;
-	border-left: 1px solid var(--rule);
+	border-left: 2px solid var(--gold);
 	color: var(--ink-soft);
+	font-family: var(--font-display);
 	font-style: italic;
 }
 .prose img {
@@ -210,7 +225,7 @@ time,
 	margin-block: 2.5em;
 }
 .prose code {
-	font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+	font-family: var(--font-mono);
 	font-size: 0.85em;
 	background: var(--surface);
 	padding: 0.1em 0.35em;

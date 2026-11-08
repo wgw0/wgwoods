@@ -7,65 +7,73 @@ Built using principles from Anthropic's frontend-design skill, Impeccable and Ta
 
 - **Who:** William Woods. Writes about organisations, people and how they change, with a lens on
   defence and security. Senior Analyst at Hookflash; Software Engineering graduate.
-- **Feel:** calm and readable. The writing comes first.
-- **Modes:** the blog is for reading; projects are a showcase; the home page introduces both.
+- **Feel:** a premium, editorial publication with an executive-consulting edge. Readable first.
+- **Modes:** writing is for reading; About doubles as a CV; the home page introduces both.
 
 ## Principles
 
-1. **One bold element.** The home page opens with a single large serif sentence saying what the
-   site is about. Everything else is quiet.
-2. **Type does the work.** Two clearly different families: Newsreader (serif) for the opening line and
-   long-form writing, Hanken Grotesk (sans) for headings, navigation and lists.
-3. **Structure carries meaning.** Lines separate posts in a list, and that's all. No cards, eyebrow
-   labels, numbered sections, pills or decorative shadows.
-4. **One moment of motion.** The intro fades in once on load. Links change colour on hover.
-   Nothing animates on scroll. Reduced-motion settings are respected.
-5. **Colour from the name.** A pine green (Woods) is the only accent, used for links and focus.
-   Neutrals are very slightly tinted toward it.
+1. **White page, navy type, gold accent.** Roughly 60% navy ink, 30% white and light grey, 10% gold.
+   Dark-mode devices get the inverse: a navy page with off-white type.
+2. **Type does the work.** Playfair Display (serif) for headings and post titles carries editorial
+   authority; Inter (sans) for body text and navigation; JetBrains Mono for dates and metadata, the
+   technical, data-driven voice.
+3. **Gold is earned.** Gold marks things, it doesn't fill them: the short rule under the main heading,
+   link underlines, the timeline markers, the top edge of the featured card and the reading progress bar.
+   Plain gold (`#c5a880`) fails contrast as text on white, so any gold text uses bronze (`--accent`).
+4. **One featured element per page.** The home page features the latest post as a single card;
+   everything else is a quiet list separated by lines.
+5. **Restrained motion.** The intro fades in once on load; the progress bar tracks reading. Nothing
+   animates on scroll. Reduced-motion settings are respected.
 
 ## Tokens (`src/styles/global.css`)
 
-| Role        | Light                      | Dark                       |
-| ----------- | -------------------------- | -------------------------- |
-| canvas      | `oklch(98.6% 0.004 165)`   | `oklch(20% 0.014 170)`     |
-| surface     | `oklch(95.8% 0.008 165)`   | `oklch(24% 0.016 170)`     |
-| ink         | `oklch(23% 0.018 170)`     | `oklch(93% 0.008 165)`     |
-| ink-soft    | `oklch(45% 0.02 170)`      | `oklch(74% 0.015 165)`     |
-| rule        | `oklch(88% 0.012 165)`     | `oklch(32% 0.016 170)`     |
-| pine        | `oklch(44% 0.075 160)`     | `oklch(79% 0.085 160)`     |
+| Role          | Light     | Dark      | Use                                   |
+| ------------- | --------- | --------- | ------------------------------------- |
+| canvas        | `#ffffff` | `#0f172a` | page background                       |
+| surface       | `#f8fafc` | `#1e293b` | featured card, subscribe box, code    |
+| ink           | `#0f172a` | `#f8fafc` | text and headings                     |
+| ink-soft      | `#475569` | `#94a3b8` | descriptions and metadata             |
+| rule          | `#e2e8f0` | `#334155` | dividing lines and borders            |
+| accent        | `#7f6420` | `#d4af37` | gold text (hover, labels): passes AA  |
+| gold          | `#c5a880` | `#c5a880` | decoration only                       |
 
-- Type scale: 0.875, 1, 1.1875, 1.5, ~2.25, ~3.5rem (the top two scale with screen width).
+- Type scale: 0.75, 0.875, 1, 1.125, 1.5, ~2.25, ~3.5rem (the top two scale with screen width).
 - Spacing: 4px base (`--space-1` to `--space-24`).
-- Reading width: 66 characters. Page width: 46rem.
+- Reading width: 68 characters. Page width: 46rem.
 - Easing: `cubic-bezier(0.16, 1, 0.3, 1)`.
 
 ## Avoid
 
-Cream background with terracotta accent, dark background with neon accent, gradient text, glass,
-card grids with soft grey shadows, all-caps labels above headings, "→" on links, emoji as icons,
-monospace used for decoration, fade-in-on-scroll, invented stats or testimonials.
+Bright metallic gold gradients, gold text on white, neon accents, glass, card grids, emoji as icons,
+"→" on links, fade-in-on-scroll, stock photos of military hardware, invented stats or testimonials.
 
 ## Layout
 
 ```
-William Woods                          Writing  About       
+WILLIAM WOODS                                 Writing  About
 
 I write about organisations,
 people, and how they
-change.                             (serif, large)
-
+change.                             (Playfair, large)
+───                                 (short gold rule)
 Short intro paragraph
 
-Writing                                       All writing
+Latest briefing
+┌───────────────────────────────────────────────────────┐
+│ image                                                 │
+├═══════════════════════════════════════════════════════┤  gold top edge
+│ 8 August 2026                       (mono)            │
+│ Post title                          (Playfair)        │
+│ Description                                           │
+└───────────────────────────────────────────────────────┘
+
+More writing                                  All writing
 ─────────────────────────────────────────────────────────
-Post title                                     8 Nov 2026
+Post title                                  6 August 2026
 One-line description
 ─────────────────────────────────────────────────────────
 
-Projects                                     All projects
-Project name (link)
-One or two sentences
-
-─────────────────────────────────────────────────────────
 © 2026 William Woods                 Email  LinkedIn  GitHub
 ```
+
+Posts add a gold reading-progress bar at the top of the screen and a Substack sign-up box at the end.
