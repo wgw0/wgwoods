@@ -6,7 +6,7 @@ Built using principles from Anthropic's frontend-design skill, Impeccable and Ta
 ## Brief
 
 - **Who:** William Woods. Writes about organisations, people and how they change, with a lens on
-  defence and security. Senior Analyst at Hookflash; Software Engineering graduate.
+  defence and security. Senior Analyst; Software Engineering graduate.
 - **Feel:** a premium, editorial publication with an executive-consulting edge. Readable first.
 - **Modes:** writing is for reading; About doubles as a CV; the home page introduces both.
 
