@@ -13,7 +13,6 @@
 	--accent: #7f6420; /* bronze: gold that is safe for text on white */
 	--accent-strong: #5f4a17;
 	--gold: #c5a880; /* decorative only: rules, markers, bars */
-	--wave: #38bdf8; /* light blue line under the header */
 	--selection: #f1e6cc;
 
 	/* Type */
@@ -58,7 +57,6 @@
 		--accent: #d4af37;
 		--accent-strong: #e6c869;
 		--gold: #c5a880;
-		--wave: #7dd3fc;
 		--selection: #3d3520;
 	}
 }
