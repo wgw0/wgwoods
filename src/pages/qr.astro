@@ -1,0 +1,57 @@
+---
+// Not linked from the menu and kept out of search; share it directly or open it to be scanned.
+import { SITE_TITLE, SITE_URL_LINKEDIN_SHORT } from '../consts';
+import Base from '../layouts/Base.astro';
+import { linkedinQrSvg } from '../lib/qr';
+
+const svg = await linkedinQrSvg();
+const shortLink = SITE_URL_LINKEDIN_SHORT.replace('https://', '');
+---
+
+<Base title={`Connect | ${SITE_TITLE}`} description="Scan to connect with William Woods on LinkedIn." noindex>
+	<section class="qr">
+		<h1>Connect on LinkedIn</h1>
+		<div class="code" role="img" aria-label={`QR code linking to ${shortLink}`} set:html={svg} />
+		<p class="link"><a href={SITE_URL_LINKEDIN_SHORT}>{shortLink}</a></p>
+		<p class="download"><a href="/qr-linkedin.svg" download="william-woods-linkedin-qr.svg">Download QR code (SVG)</a></p>
+	</section>
+</Base>
+
+<style>
+	.qr {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		padding-top: var(--space-8);
+	}
+	h1 {
+		font-size: var(--step-3);
+	}
+	.code {
+		width: min(100%, 26rem);
+		margin-top: var(--space-8);
+		padding: var(--space-4);
+		background: #fff;
+		border-radius: 24px;
+		border: 1px solid var(--rule);
+	}
+	.code :global(svg) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+	.link {
+		margin-top: var(--space-6);
+		font-family: var(--font-mono);
+		font-size: var(--step-0);
+	}
+	.download {
+		margin-top: var(--space-3);
+		font-size: var(--step--1);
+		color: var(--ink-soft);
+	}
+	.download a {
+		color: var(--ink-soft);
+	}
+</style>
