@@ -13,8 +13,16 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+
+// About 230 words a minute, ignoring Markdown image and link syntax.
+const words = (post.body ?? '')
+	.replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+	.replace(/\]\([^)]*\)/g, ']')
+	.split(/\s+/)
+	.filter(Boolean).length;
+const readingMinutes = Math.max(1, Math.round(words / 230));
 ---
 
-<BlogPost {...post.data}>
+<BlogPost {...post.data} id={post.id} readingMinutes={readingMinutes}>
 	<Content />
 </BlogPost>

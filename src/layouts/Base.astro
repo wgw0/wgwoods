@@ -7,14 +7,15 @@ interface Props {
 	title: string;
 	description: string;
 	noindex?: boolean;
+	ogImage?: string;
 }
-const { title, description, noindex } = Astro.props;
+const { title, description, noindex, ogImage } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en-GB">
 	<head>
-		<BaseHead title={title} description={description} />
+		<BaseHead title={title} description={description} ogImage={ogImage} />
 		{noindex && <meta name="robots" content="noindex" />}
 	</head>
 	<body>
