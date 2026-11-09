@@ -2,3 +2,4 @@
 # 302 (temporary) on purpose: browsers don't cache it, so a destination can be changed later
 # without breaking printed QR codes.
 /linkedin  https://www.linkedin.com/in/w-woods/  302
+/li        https://www.linkedin.com/in/w-woods/  302
