@@ -53,14 +53,17 @@ main{padding-block:var(--space-6) var(--space-8)}
 .eyebrow{font-family:var(--font-mono);font-size:var(--step--2);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2)}
 
 .table{display:grid;grid-template-columns:auto 1fr;gap:var(--space-4) var(--space-6);align-items:start}
-.cards{display:flex;flex-wrap:wrap;gap:6px;min-height:60px;align-items:center}
-.c{width:42px;height:58px;border-radius:6px;background:var(--card);color:var(--ink);border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:1.3rem;box-shadow:0 1px 2px rgba(15,23,42,.08)}
+.cards{display:flex;flex-wrap:wrap;gap:8px;min-height:82px;align-items:center}
+.c{width:58px;height:80px;border-radius:8px;background:var(--card);color:var(--ink);border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:1.9rem;box-shadow:0 1px 2px rgba(15,23,42,.08)}
 .c.red{color:#b91c1c}
 @media (prefers-color-scheme: dark){.c.red{color:#f87171}}
 .c.empty{background:transparent;border:1px dashed var(--gold);box-shadow:none}
 .hands{display:grid;gap:var(--space-2)}
 .hand{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-2) 0 var(--space-2) var(--space-3);border-left:2px solid transparent}
-.hand.active{border-left-color:var(--gold)}
+.hand.active{border-left-color:var(--gold);background:linear-gradient(90deg,var(--surface),transparent)}
+.hand.pick{cursor:pointer;border-left-color:var(--rule);border-radius:0 8px 8px 0;transition:background 150ms var(--ease-out),border-color 150ms var(--ease-out)}
+.hand.pick:hover{border-left-color:var(--gold);background:var(--surface)}
+.pickhint{margin-top:var(--space-2);font-size:var(--step--1)}
 .hand .tot{text-align:right;white-space:nowrap}
 .hand .tot b{display:block;font-family:var(--font-display);font-size:var(--step-2);font-weight:600;line-height:1.1;color:var(--ink)}
 
@@ -468,8 +471,16 @@ function finishHandIfNeeded(h){
 
 function advance(){
   if(!cur().done) return;
-  for(let i=S.active+1;i<S.hands.length;i++){ if(!S.hands[i].done){ S.active=i; return; } }
+  // Next unfinished hand after this one, wrapping round (hands can be played in any order)
+  const n=S.hands.length;
+  for(let k=1;k<n;k++){ const i=(S.active+k)%n; if(!S.hands[i].done){ S.active=i; return; } }
   S.stage='over';
+}
+
+function canPick(i){ return S.stage==='play' && !S.pendingDouble && S.hands.length>1 && !S.hands[i].done && i!==S.active; }
+function pickHand(i){
+  if(!canPick(i)) return;
+  snap(); buzz(); S.active=i; render();
 }
 
 function buzz(){ try{ navigator.vibrate && navigator.vibrate(8); }catch(e){} }
@@ -530,7 +541,8 @@ function render(){
     const placeholder = (S.stage==='p1'||S.stage==='d'||S.stage==='p2') ? cardHTML(null) : '';
     const totalTxt = h.cards.length? `${soft&&t<21?'Soft ':''}${t}` : '';
     const status = h.bj?'Blackjack':h.surrendered?'Surrendered':t>21?'Bust':(h.done?'Stood':'')+(h.doubled?' · doubled':'');
-    return `<div class="hand ${active?'active':''}">
+    const pick = canPick(i) ? ` pick" role="button" tabindex="0" data-i="${i}" aria-label="Switch to hand ${i+1}` : '';
+    return `<div class="hand ${active?'active':''}${pick}">
       <div class="cards">${cards}${placeholder}</div>
       <div class="tot meta">${multi?`Hand ${i+1}`:''}<b>${totalTxt}</b>${status}</div></div>`;
   }).join('');
@@ -565,7 +577,7 @@ function renderAdvice(){
   else {
     const h=cur(), hn=S.hands.length>1?` · hand ${S.active+1}`:'';
     if(h.cards.length<2){
-      el.innerHTML=`<div class="prompt">Tap the second card for hand ${S.active+1}</div><div class="why">Split hands are dealt one card at a time.</div>`;
+      el.innerHTML=`<div class="prompt">Tap the second card for hand ${S.active+1}</div><div class="why">Split hands are dealt one card at a time.${S.hands.some((_,i)=>canPick(i))?' Tap another hand above to switch to it.':''}</div>`;
       pad=`Hand ${S.active+1}: second card`;
     } else if(S.pendingDouble){
       el.innerHTML=`<div class="prompt A-D">Doubled. Tap your one extra card.</div>`;
@@ -584,7 +596,8 @@ function renderAdvice(){
       if(S.dealer===1 && h.cards.length===2 && S.hands.length===1) note+=`<div class="note">Dealer shows an Ace: never take insurance.</div>`;
       const r=reason(h.cards,u,d);
       el.innerHTML=`${mistakeHTML()}<div class="eyebrow">${desc} vs dealer ${lbl(S.dealer)}${hn}</div>
-        <div class="act A-${d.a}">${NAMES[d.a]}</div>${fb}${r?`<div class="why reason">${r}</div>`:''}${note}`;
+        <div class="act A-${d.a}">${NAMES[d.a]}</div>${fb}${r?`<div class="why reason">${r}</div>`:''}${note}
+        ${S.hands.some((_,i)=>canPick(i))?'<div class="meta pickhint">Tap another hand above to switch to it.</div>':''}`;
       btns.S.disabled=false; btns.D.disabled=!c.canDouble; btns.P.disabled=!c.canSplit; btns.R.disabled=!c.canSurrender;
       if(btns[d.a]) btns[d.a].classList.add('rec');
       pad = d.a==='H' ? 'Hit: tap the card you get' : 'Or tap a card to hit';
@@ -636,6 +649,8 @@ function renderChart(){
 // Numpad order: 7 8 9 / 4 5 6 / A(1) 2 3 / 10 across the bottom like the 0 key
 $('pad').innerHTML=[7,8,9,4,5,6,1,2,3,10].map(v=>`<button data-v="${v}">${lbl(v)}${v===10?'<small>10 J Q K</small>':''}</button>`).join('');
 $('pad').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) tapCard(+b.dataset.v);});
+$('hands').addEventListener('click',e=>{const h=e.target.closest('.hand.pick'); if(h) pickHand(+h.dataset.i);});
+$('hands').addEventListener('keydown',e=>{const h=e.target.closest('.hand.pick'); if(h && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); e.stopPropagation(); pickHand(+h.dataset.i);} });
 $('bS').onclick=()=>act('S'); $('bD').onclick=()=>act('D'); $('bP').onclick=()=>act('P'); $('bR').onclick=()=>act('R');
 $('undo').onclick=()=>{ if(undoStack.length){ const u=JSON.parse(undoStack.pop()); S=u.S; stats=u.stats; render(); } };
 $('resetStats').onclick=()=>{ stats={plays:0,book:0}; render(); };
