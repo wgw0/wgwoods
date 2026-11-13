@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Blackjack Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500..700&display=swap" rel="stylesheet">
+<style>
+/* Design tokens from wgwoods.co.uk: white page, navy type, gold accent. */
+:root{
+  --canvas:#ffffff; --surface:#f8fafc; --ink:#0f172a; --ink-soft:#475569; --rule:#e2e8f0;
+  --accent:#7f6420; --accent-strong:#5f4a17; --gold:#c5a880; --selection:#f1e6cc;
+  --font-display:'Playfair Display Variable','Playfair Display',Georgia,'Times New Roman',serif;
+  --font-sans:'Inter Variable','Inter','Segoe UI',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono Variable','JetBrains Mono',ui-monospace,'Cascadia Code',Consolas,monospace;
+  --step--2:.75rem; --step--1:.875rem; --step-0:1rem; --step-1:1.125rem; --step-2:1.5rem;
+  --step-4:clamp(2.25rem,1.6rem + 2.8vw,3.5rem);
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  /* action colours, tuned to sit with navy + gold */
+  --a-H:#1d4ed8; --a-S:#7f6420; --a-D:#15803d; --a-P:#7e22ce; --a-R:#b91c1c;
+  --t-H:#dbe6fb; --t-S:#f3ead6; --t-D:#d9f0df; --t-P:#ecdcf7; --t-R:#f8dcdc;
+  --card:#ffffff;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --canvas:#0f172a; --surface:#1e293b; --ink:#f8fafc; --ink-soft:#94a3b8; --rule:#334155;
+    --accent:#d4af37; --accent-strong:#e6c869; --gold:#c5a880; --selection:#3d3520;
+    --a-H:#7aa7ff; --a-S:#d4af37; --a-D:#4ade80; --a-P:#c084fc; --a-R:#f87171;
+    --t-H:#1e3a6e; --t-S:#4a3d17; --t-D:#14532d; --t-P:#4c1d73; --t-R:#6b1d1d;
+    --card:#1e293b;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font-sans);font-size:var(--step-0);line-height:1.6;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+::selection{background:var(--selection);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.page{width:100%;max-width:34rem;margin-inline:auto;padding-inline:var(--space-4)}
+
+header{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:var(--space-2) var(--space-6);padding-top:var(--space-6)}
+.name{font-family:var(--font-display);font-weight:600;font-size:var(--step--1);text-transform:uppercase;letter-spacing:.14em}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:var(--ink);cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.22em;text-decoration-color:var(--gold)}
+.linkbtn:hover{color:var(--accent);text-decoration-color:currentColor}
+.rule{flex-basis:100%;height:1px;margin-top:var(--space-3);background:var(--gold)}
+.meta{font-family:var(--font-mono);font-size:var(--step--2);letter-spacing:.02em;color:var(--ink-soft)}
+
+main{padding-block:var(--space-6) var(--space-8)}
+.eyebrow{font-family:var(--font-mono);font-size:var(--step--2);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2)}
+
+.table{display:grid;grid-template-columns:auto 1fr;gap:var(--space-4) var(--space-6);align-items:start}
+.cards{display:flex;flex-wrap:wrap;gap:6px;min-height:60px;align-items:center}
+.c{width:42px;height:58px;border-radius:6px;background:var(--card);color:var(--ink);border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:600;font-size:1.3rem;box-shadow:0 1px 2px rgba(15,23,42,.08)}
+.c.red{color:#b91c1c}
+@media (prefers-color-scheme: dark){.c.red{color:#f87171}}
+.c.empty{background:transparent;border:1px dashed var(--gold);box-shadow:none}
+.hands{display:grid;gap:var(--space-2)}
+.hand{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-2) 0 var(--space-2) var(--space-3);border-left:2px solid transparent}
+.hand.active{border-left-color:var(--gold)}
+.hand .tot{text-align:right;white-space:nowrap}
+.hand .tot b{display:block;font-family:var(--font-display);font-size:var(--step-2);font-weight:600;line-height:1.1;color:var(--ink)}
+
+.advice{margin:var(--space-6) 0 var(--space-4);padding:var(--space-4) 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);min-height:9.5rem}
+.act{font-family:var(--font-display);font-size:var(--step-4);font-weight:600;letter-spacing:-.015em;line-height:1.05;margin:var(--space-1) 0 var(--space-2)}
+.why{color:var(--ink-soft)}
+.fb{margin-top:var(--space-1);font-size:var(--step--1)}
+.note{margin-top:var(--space-3);padding-left:var(--space-3);border-left:2px solid var(--gold);font-size:var(--step--1);color:var(--ink-soft)}
+.prompt{font-family:var(--font-display);font-size:var(--step-2);font-weight:600;margin:var(--space-1) 0}
+.A-H{color:var(--a-H)} .A-S{color:var(--a-S)} .A-D{color:var(--a-D)} .A-P{color:var(--a-P)} .A-R{color:var(--a-R)}
+
+button{font:inherit;color:inherit;cursor:pointer}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-2)}
+.actions button{background:var(--canvas);border:1px solid var(--rule);border-radius:8px;padding:var(--space-3) var(--space-1);font-weight:600;font-size:var(--step--1);transition:border-color 150ms var(--ease-out),background 150ms var(--ease-out)}
+.actions button:disabled{opacity:.35;cursor:default}
+.actions button.rec{border-color:currentColor;box-shadow:inset 0 0 0 1px currentColor}
+#bS{color:var(--a-S)} #bD{color:var(--a-D)} #bP{color:var(--a-P)} #bR{color:var(--a-R)}
+
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-2);margin-top:var(--space-2)}
+.pad button[data-v="10"]{grid-column:span 3}
+.pad button{background:var(--surface);border:1px solid var(--rule);border-radius:8px;font-family:var(--font-display);font-size:1.6rem;font-weight:600;height:4.25rem;padding:0;line-height:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:border-color 150ms var(--ease-out)}
+/* Playfair defaults to old-style figures (3, 4, 5, 7, 9 drop below the line); use lining figures so every rank is the same height */
+.pad button,.c,.hand .tot b,.act{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}
+.pad button:hover{border-color:var(--gold)}
+.pad button:active{transform:translateY(1px)}
+.pad button small{display:block;font-family:var(--font-mono);font-size:.55rem;font-weight:400;color:var(--ink-soft);letter-spacing:.04em}
+.padhead{margin-top:var(--space-6)}
+.util{display:flex;justify-content:space-between;margin-top:var(--space-4)}
+
+details{margin-top:var(--space-8);border-top:1px solid var(--rule);padding-top:var(--space-4)}
+summary{cursor:pointer;font-family:var(--font-display);font-weight:600;font-size:var(--step-1)}
+summary::marker{color:var(--gold)}
+.chart{width:100%;border-collapse:collapse;font-family:var(--font-mono);font-size:.68rem;margin-top:var(--space-3);table-layout:fixed}
+.chart th,.chart td{border:1px solid var(--canvas);text-align:center;padding:3px 0}
+.chart th{font-weight:500;color:var(--ink-soft)}
+.chart tr.sec th{text-align:left;padding:var(--space-3) 0 var(--space-1);font-family:var(--font-sans);font-size:var(--step--2);text-transform:uppercase;letter-spacing:.08em}
+.chart td{font-weight:500}
+.k-H{background:var(--t-H);color:var(--a-H)} .k-S{background:var(--t-S);color:var(--a-S)} .k-D{background:var(--t-D);color:var(--a-D)} .k-P{background:var(--t-P);color:var(--a-P)} .k-R{background:var(--t-R);color:var(--a-R)}
+.chart td.cur{outline:2px solid var(--ink);outline-offset:-2px}
+.legend{font-size:var(--step--2);color:var(--ink-soft);margin-top:var(--space-3);line-height:1.7}
+button{touch-action:manipulation}
+.modes{display:flex;gap:var(--space-4)}
+.mode[aria-current="page"]{color:var(--accent);text-decoration-color:currentColor;text-decoration-thickness:2px}
+.reason{margin-top:var(--space-2);font-size:var(--step--1)}
+.miss{margin-bottom:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:6px;background:var(--t-R);font-size:var(--step--1)}
+.stats{margin-top:var(--space-6);display:flex;gap:var(--space-3);align-items:baseline;flex-wrap:wrap}
+.actions.five{grid-template-columns:repeat(5,1fr)}
+.actions button.right{background:var(--t-D);border-color:var(--a-D);box-shadow:inset 0 0 0 1px var(--a-D)}
+.actions button.wrong{background:var(--t-R);border-color:var(--a-R)}
+.skip{display:flex;gap:var(--space-2);align-items:center;margin-top:var(--space-4)}
+.skip input{accent-color:var(--accent)}
+.result{font-family:var(--font-display);font-size:var(--step-2);font-weight:600}
+footer{padding-block:var(--space-6) var(--space-8);border-top:1px solid var(--rule)}
+
+dialog{background:var(--canvas);color:var(--ink);border:1px solid var(--rule);border-radius:12px;max-width:26rem;width:calc(100% - 32px);padding:var(--space-6)}
+dialog::backdrop{background:rgba(15,23,42,.45)}
+dialog h2{font-family:var(--font-display);font-weight:600;font-size:var(--step-2);margin:0}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--rule)}
+.opt span small{display:block;color:var(--ink-soft);font-size:var(--step--2);line-height:1.5}
+.opt input{width:20px;height:20px;flex:none;accent-color:var(--accent)}
+.opt select{font:inherit;font-size:var(--step--1);background:var(--surface);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:4px 6px}
+.done{margin-top:var(--space-4);background:var(--ink);color:var(--canvas);border:0;border-radius:8px;padding:var(--space-2) var(--space-6);font-weight:600}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header class="page">
+  <span class="name">Blackjack Assistant</span>
+  <nav class="modes" aria-label="Mode">
+    <button class="linkbtn mode" data-mode="assist">Assistant</button>
+    <button class="linkbtn mode" data-mode="practice">Practice</button>
+    <button class="linkbtn" id="rulesBtn">Rules</button>
+  </nav>
+  <div class="rule" aria-hidden="true"></div>
+  <div class="meta" id="rulesSum" style="flex-basis:100%"></div>
+</header>
+
+<main class="page" id="assistView">
+  <section class="table">
+    <div>
+      <div class="eyebrow">Dealer</div>
+      <div class="cards" id="dealer"></div>
+    </div>
+    <div>
+      <div class="eyebrow">You</div>
+      <div class="hands" id="hands"></div>
+    </div>
+  </section>
+
+  <section class="advice" id="advice" aria-live="polite"></section>
+
+  <div class="actions">
+    <button id="bS" title="Stand (S)">Stand</button>
+    <button id="bD" title="Double (D)">Double</button>
+    <button id="bP" title="Split (P)">Split</button>
+    <button id="bR" title="Surrender (R)">Surrender</button>
+  </div>
+
+  <div class="eyebrow padhead" id="padLabel">Tap a card</div>
+  <div class="pad" id="pad"></div>
+
+  <div class="util">
+    <button class="linkbtn" id="undo">Undo</button>
+    <button class="linkbtn" id="newRound">New hand</button>
+  </div>
+
+  <details id="chartBox">
+    <summary>Strategy chart for these rules</summary>
+    <table class="chart" id="chart"></table>
+    <div class="legend">
+      H hit · S stand · Dh double, else hit · Ds double, else stand · P split ·
+      Rh / Rs / Rp surrender, else hit / stand / split. Never take insurance or even money.
+      Charts follow Wizard of Odds basic strategy, plus the hand-composition exceptions noted in the advice.
+    </div>
+  </details>
+
+  <p class="meta stats"><span id="statsTxt"></span> <button class="linkbtn meta" id="resetStats">Reset</button></p>
+</main>
+
+<main class="page" id="practiceView" hidden>
+  <section class="table">
+    <div>
+      <div class="eyebrow">Dealer</div>
+      <div class="cards" id="pDealer"></div>
+    </div>
+    <div>
+      <div class="eyebrow">You</div>
+      <div class="cards" id="pHand"></div>
+    </div>
+  </section>
+
+  <section class="advice" id="pAdvice" aria-live="polite"></section>
+
+  <div class="actions five" id="pActions">
+    <button data-a="H" class="A-H">Hit</button>
+    <button data-a="S" class="A-S">Stand</button>
+    <button data-a="D" class="A-D">Double</button>
+    <button data-a="P" class="A-P">Split</button>
+    <button data-a="R" class="A-R">Surr.</button>
+  </div>
+
+  <div class="util">
+    <span class="meta" id="pScore"></span>
+    <button class="linkbtn" id="pNext">Next hand</button>
+  </div>
+  <label class="meta skip"><input type="checkbox" id="pSkip" checked> Skip obvious hands (hard 8 or less, hard 17 or more, pairs of 10s)</label>
+  <p class="why" style="margin-top:var(--space-6);font-size:var(--step--1)">Practice deals random first two cards using the table rules you've set. Pick the book play to build it into habit, so you need the assistant less.</p>
+</main>
+
+<footer class="page">
+  <p class="meta">Keys: A or 1, 2–9, 0/T/J/Q/K for ten-cards · . or S stand · + or D double · / or P split · − or R surrender · H hit (practice) · Backspace or U undo · Enter or N new hand.</p>
+</footer>
+
+<dialog id="rulesDlg">
+  <h2>Table rules</h2>
+  <p class="meta" style="margin:var(--space-1) 0 var(--space-2)">Match these to the game you're playing. Online games usually show them in the info or help panel.</p>
+  <label class="opt"><span>Number of decks</span><select id="r_decks"><option value="1">1 deck</option><option value="2">2 decks</option><option value="4">4–8 decks</option></select></label>
+  <label class="opt"><span>Dealer hits soft 17 (H17)<small>Off means the dealer stands on all 17s (S17).</small></span><input type="checkbox" id="r_h17"></label>
+  <label class="opt"><span>Double down allowed on<small>Some games only allow doubling on 9–11 or 10–11.</small></span><select id="r_dbl"><option value="any">Any two cards</option><option value="9-11">9, 10, 11 only</option><option value="10-11">10, 11 only</option></select></label>
+  <label class="opt"><span>Double after split (DAS)</span><input type="checkbox" id="r_das"></label>
+  <label class="opt"><span>Late surrender offered</span><input type="checkbox" id="r_surrender"></label>
+  <label class="opt"><span>No hole card (European)<small>Dealer takes their second card after you play, and you lose doubles and splits to a dealer blackjack. Leave off if extra bets are refunded.</small></span><input type="checkbox" id="r_enhc"></label>
+  <label class="opt"><span>Re-split aces allowed</span><input type="checkbox" id="r_rsa"></label>
+  <label class="opt"><span>Hit split aces allowed<small>Usually off: split aces get one card each.</small></span><input type="checkbox" id="r_hsa"></label>
+  <label class="opt"><span>Max hands after splitting</span><select id="r_max"><option>2</option><option>3</option><option>4</option></select></label>
+  <button class="done" id="rulesDone">Done</button>
+</dialog>
+
+<script>
+/* ===================== STRATEGY ENGINE =====================
+   Card values: A=1, 2..9, 10 (10/J/Q/K). Dealer upcard u: 2..10, A=11.
+   Charts transcribed from Wizard of Odds basic strategy (1 deck, 2 decks, 4-8 decks; S17 and H17).
+   Codes per dealer column 2,3,4,5,6,7,8,9,10,A:
+   H S Dh Ds P Ph(split if DAS) Pd(split if DAS, else double) Ps(split if DAS, else stand) Rh Rs Rp */
+
+const C = s => s.trim().split(/\s+/);
+const rep = (code,n) => Array(n).fill(code);
+
+function buildCharts(){
+  const multiS17 = {
+    hard:{8:rep('H',10), 9:C('H Dh Dh Dh Dh H H H H H'), 10:C('Dh Dh Dh Dh Dh Dh Dh Dh H H'), 11:C('Dh Dh Dh Dh Dh Dh Dh Dh Dh H'),
+      12:C('H H S S S H H H H H'), 13:C('S S S S S H H H H H'), 14:C('S S S S S H H H H H'),
+      15:C('S S S S S H H H Rh H'), 16:C('S S S S S H H Rh Rh Rh'), 17:rep('S',10)},
+    soft:{13:C('H H H Dh Dh H H H H H'), 14:C('H H H Dh Dh H H H H H'), 15:C('H H Dh Dh Dh H H H H H'), 16:C('H H Dh Dh Dh H H H H H'),
+      17:C('H Dh Dh Dh Dh H H H H H'), 18:C('S Ds Ds Ds Ds S S H H H'), 19:rep('S',10)},
+    pair:{2:C('Ph Ph P P P P H H H H'), 3:C('Ph Ph P P P P H H H H'), 4:C('H H H Ph Ph H H H H H'),
+      6:C('Ph P P P P H H H H H'), 7:C('P P P P P P H H H H'), 8:rep('P',10), 9:C('P P P P P S P P S S'), 10:rep('S',10), 1:rep('P',10)}
+  };
+  const multiH17 = clone(multiS17);
+  multiH17.hard[11]=rep('Dh',10);
+  multiH17.hard[15]=C('S S S S S H H H Rh Rh');
+  multiH17.hard[17]=C('S S S S S S S S S Rs');
+  multiH17.soft[18]=C('Ds Ds Ds Ds Ds S S H H H');
+  multiH17.soft[19]=C('S S S S Ds S S S S S');
+  multiH17.pair[8]=C('P P P P P P P P P Rp');
+
+  const twoS17 = {
+    hard:{8:rep('H',10), 9:C('Dh Dh Dh Dh Dh H H H H H'), 10:C('Dh Dh Dh Dh Dh Dh Dh Dh H H'), 11:rep('Dh',10),
+      12:C('H H S S S H H H H H'), 13:C('S S S S S H H H H H'), 14:C('S S S S S H H H H H'),
+      15:C('S S S S S H H H Rh H'), 16:C('S S S S S H H H Rh Rh'), 17:rep('S',10)},
+    soft:{13:C('H H H Dh Dh H H H H H'), 14:C('H H H Dh Dh H H H H H'), 15:C('H H Dh Dh Dh H H H H H'), 16:C('H H Dh Dh Dh H H H H H'),
+      17:C('H Dh Dh Dh Dh H H H H H'), 18:C('S Ds Ds Ds Ds S S H H H'), 19:rep('S',10)},
+    pair:{2:C('Ph Ph P P P P H H H H'), 3:C('Ph Ph P P P P H H H H'), 4:C('H H H Ph Ph H H H H H'),
+      6:C('P P P P P Ph H H H H'), 7:C('P P P P P P Ph H H H'), 8:rep('P',10), 9:C('P P P P P S P P S S'), 10:rep('S',10), 1:rep('P',10)}
+  };
+  const twoH17 = clone(twoS17);
+  twoH17.hard[15]=C('S S S S S H H H Rh Rh');
+  twoH17.hard[17]=C('S S S S S S S S S Rs');
+  twoH17.soft[14]=C('H H Dh Dh Dh H H H H H');
+  twoH17.soft[18]=C('Ds Ds Ds Ds Ds S S H H H');
+  twoH17.soft[19]=C('S S S S Ds S S S S S');
+  twoH17.pair[8]=C('P P P P P P P P P Rp');
+
+  const oneS17 = {
+    hard:{7:rep('H',10), 8:C('H H H Dh Dh H H H H H'), 9:C('Dh Dh Dh Dh Dh H H H H H'), 10:C('Dh Dh Dh Dh Dh Dh Dh Dh H H'), 11:rep('Dh',10),
+      12:C('H H S S S H H H H H'), 13:C('S S S S S H H H H H'), 14:C('S S S S S H H H H H'),
+      15:C('S S S S S H H H H H'), 16:C('S S S S S H H H Rh Rh'), 17:rep('S',10)},
+    soft:{13:C('H H Dh Dh Dh H H H H H'), 14:C('H H Dh Dh Dh H H H H H'), 15:C('H H Dh Dh Dh H H H H H'), 16:C('H H Dh Dh Dh H H H H H'),
+      17:C('Dh Dh Dh Dh Dh H H H H H'), 18:C('S Ds Ds Ds Ds S S H H S'), 19:C('S S S S Ds S S S S S')},
+    pair:{2:C('Ph P P P P P H H H H'), 3:C('Ph Ph P P P P Ph H H H'), 4:C('H H Ph Pd Pd H H H H H'),
+      6:C('P P P P P Ph H H H H'), 7:C('P P P P P P Ph H Rs H'), 8:rep('P',10), 9:C('P P P P P S P P S S'), 10:rep('S',10), 1:rep('P',10)}
+  };
+  const oneH17 = clone(oneS17);
+  oneH17.hard[15]=C('S S S S S H H H H Rh');
+  oneH17.hard[17]=C('S S S S S S S S S Rs');
+  oneH17.soft[18]=C('S Ds Ds Ds Ds S S H H H');
+  oneH17.pair[7]=C('P P P P P P Ph H Rs Rh');
+  oneH17.pair[9]=C('P P P P P S P P S Ps');
+
+  return {1:{s17:oneS17,h17:oneH17}, 2:{s17:twoS17,h17:twoH17}, 4:{s17:multiS17,h17:multiH17}};
+}
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+const CHARTS = buildCharts();
+
+function handValue(cards){
+  let s=0, ace=false;
+  for(const c of cards){ s+=c; if(c===1) ace=true; }
+  if(ace && s+10<=21) return {t:s+10, soft:true};
+  return {t:s, soft:false};
+}
+const col = u => u-2; // 2..11 -> 0..9
+
+function chartFor(R){ return CHARTS[R.decks][R.h17?'h17':'s17']; }
+
+function hardRow(ch,t){
+  const keys=Object.keys(ch.hard).map(Number);
+  const min=Math.min(...keys);
+  return ch.hard[Math.max(min,Math.min(17,t))];
+}
+
+function doubleAllowedTotal(R,t,soft){
+  if(R.dbl==='any') return true;
+  if(soft) return false;
+  return R.dbl==='9-11' ? (t>=9&&t<=11) : (t>=10&&t<=11);
+}
+
+/* Composition-dependent exceptions (Wizard of Odds appendices). Returns {code, note} or null. */
+function exception(cards,u,R,t,soft){
+  const n=cards.length;
+  const key=[...cards].sort((a,b)=>b-a).join('+');
+  if(!soft && t===16 && u===10 && n>=3)
+    return {code:'S', note:'Exception: a 16 made of three or more cards stands against a 10.'};
+  if(soft && t===18 && u===11 && !R.h17){
+    if((R.decks===2 && n>=3) || (R.decks===4 && n>=4))
+      return {code:'S', note:`Exception: a soft 18 of ${R.decks===2?'three':'four'} or more cards stands against an Ace.`};
+  }
+  if(n===2 && R.decks===2 && !R.h17){
+    if(u===11 && (key==='9+2'||key==='8+3')) return {code:'H', note:'Exception: in a two-deck game this exact 11 hits against an Ace.'};
+    if(u===4 && key==='10+2') return {code:'H', note:'Exception: in a two-deck game 10+2 hits against a 4.'};
+  }
+  if(n===2 && R.decks===1 && R.h17){
+    if(u===6 && key==='6+2') return {code:'H', note:'Exception: in single deck, 6+2 hits against a 6.'};
+    if(u===3 && (key==='7+5'||key==='8+4')) return {code:'S', note:'Exception: in single deck, this 12 stands against a 3.'};
+    if(u===4 && key==='10+2') return {code:'H', note:'Exception: in single deck, 10+2 hits against a 4.'};
+  }
+  return null;
+}
+
+// o = {canDouble, canSplit, canSurrender}. Returns {a, fb?, forced?, note?}
+function decide(cards,u,R,o){
+  const {t,soft}=handValue(cards);
+  if(t>21) return {a:'BUST'};
+  if(t===21) return {a:'S'};
+  const ch=chartFor(R), c=col(u);
+  const pair = cards.length===2 && cards[0]===cards[1];
+  const canDbl = o.canDouble && doubleAllowedTotal(R,t,soft);
+  let code=null, note=null;
+
+  if(pair && o.canSplit && ch.pair[cards[0]]){
+    let p=ch.pair[cards[0]][c];
+    // No hole card: don't put extra money out against a 10 or Ace
+    if(R.enhc && cards[0]===1 && u===11) p=null;
+    if(R.enhc && cards[0]===8 && u>=10) p=null;
+    if(p==='P' || (/^P[hds]$/.test(p) && R.das)) return {a:'P'};
+    if(p==='Rp') return o.canSurrender?{a:'R',fb:'P'}:{a:'P'};
+    if(p && !/^P/.test(p)) code=p;           // H, S, Dh, Rh, Rs for a pair row
+  }
+  if(!code){
+    if(soft) code = t<=12 ? 'H' : t>=20 ? 'S' : ch.soft[t][c];
+    else code = hardRow(ch,t)[c];
+    if(R.enhc && !soft && t===11 && u>=10) code='H';
+    const ex=o.chart?null:exception(cards,u,R,t,soft);
+    if(ex && !(ex.code==='S' && /^R/.test(code) && o.canSurrender)){ code=ex.code; note=ex.note; }
+  }
+
+  let res;
+  if(code==='Dh') res = canDbl?{a:'D',fb:'H'}:{a:'H',forced:'D'};
+  else if(code==='Ds') res = canDbl?{a:'D',fb:'S'}:{a:'S',forced:'D'};
+  else if(code==='Rh') res = o.canSurrender?{a:'R',fb:'H'}:{a:'H'};
+  else if(code==='Rs') res = o.canSurrender?{a:'R',fb:'S'}:{a:'S'};
+  else res = {a:code};
+  if(note) res.note=note;
+  return res;
+}
+
+/* One-line plain-English reason for a decision */
+function reason(cards,u,d){
+  if(d.note || d.a==='BUST') return '';
+  const {t,soft}=handValue(cards);
+  const weak = u>=2 && u<=6;
+  switch(d.a){
+    case 'P':
+      if(cards[0]===1) return 'Two aces together are a soft 12. Split, and each ace starts a strong hand.';
+      if(cards[0]===8) return 'A pair of 8s is 16, the worst total. Split, and each 8 is a fair start.';
+      if(cards[0]===9) return '18 loses to this card more than you would think. Two hands starting on 9 do better.';
+      return weak ? 'The dealer is weak, so get more money out: two hands from these cards beat one.'
+                  : 'Two hands starting from these cards do better than the total they make together.';
+    case 'D':
+      return weak ? 'The dealer card is weak and busts often, so this is the moment to get more money on the table.'
+                  : `${soft?'Soft ':''}${t} is a strong total to take one card on, so double your bet.`;
+    case 'R':
+      return 'This hand loses well over half the time. Surrender gets half your bet back, which beats playing it out.';
+    case 'S':
+      if(soft) return `Soft ${t} is a good enough total against this card. Stand.`;
+      if(t>=17) return '17 or more is too likely to bust if you hit.';
+      return 'The dealer must keep drawing to 17 and busts often from this card. Let them take the risk, not you.';
+    case 'H':
+      if(soft && t===18) return 'Soft 18 usually loses to a dealer 9, 10 or Ace. A soft hand can\'t bust on one card, so hit.';
+      if(soft) return 'A soft hand can\'t bust on one card, so take a free shot at improving it.';
+      if(t<=11) return 'You can\'t bust with one more card, so hit.';
+      if(t===12 && u<=3) return 'A dealer 2 or 3 busts less often than a 4–6, so hitting 12 is slightly better than standing.';
+      return 'A dealer 7 or higher usually makes 17 or more, so standing on this total loses more than hitting.';
+  }
+  return '';
+}
+
+/* ===================== APP STATE ===================== */
+const NAMES={H:'Hit',S:'Stand',D:'Double down',P:'Split',R:'Surrender',BUST:'Bust'};
+const DEFAULT_RULES={decks:4,h17:false,dbl:'any',das:true,surrender:false,enhc:false,rsa:false,hsa:false,max:4};
+let R=loadRules();
+let S=fresh();
+let undoStack=[];
+let stats={plays:0,book:0};
+
+function fresh(){ return {stage:'p1', dealer:null, hands:[newHand([])], active:0, pendingDouble:false}; }
+function newHand(cards,fromSplit=false,splitAces=false){ return {cards,fromSplit,splitAces,done:false,doubled:false,surrendered:false}; }
+function loadRules(){ try{ return {...DEFAULT_RULES, ...JSON.parse(localStorage.getItem('bj_rules')||'{}')}; }catch(e){ return {...DEFAULT_RULES}; } }
+function saveRules(){ try{ localStorage.setItem('bj_rules',JSON.stringify(R)); }catch(e){} }
+function snap(){ undoStack.push(JSON.stringify({S,stats})); if(undoStack.length>100) undoStack.shift(); }
+// Score the move the player is about to make against the book play. Call after snap(), before changing the hand.
+function judge(a){
+  const h=cur();
+  if(S.stage!=='play' || S.pendingDouble || h.cards.length<2) return;
+  const book=decide(h.cards,up(),R,caps(h)).a;
+  stats.plays++; if(a===book) stats.book++;
+  S.last={did:a, book, ok:a===book};
+}
+function mistakeHTML(){
+  if(!S.last || S.last.ok) return '';
+  return `<div class="miss">Last move: you chose <b>${NAMES[S.last.did].toLowerCase()}</b>, but the book play was <b class="A-${S.last.book}">${NAMES[S.last.book].toLowerCase()}</b>.</div>`;
+}
+const up = () => S.dealer===1?11:S.dealer;
+const lbl = v => v===1?'A':String(v);
+const cur = () => S.hands[S.active];
+
+function caps(h){
+  const n=h.cards.length;
+  const pair = n===2 && h.cards[0]===h.cards[1];
+  const {t,soft}=handValue(h.cards);
+  return {
+    canDouble: n===2 && (!h.fromSplit||R.das) && !(h.splitAces && !R.hsa) && doubleAllowedTotal(R,t,soft),
+    canSplit: pair && S.hands.length<R.max && !(h.cards[0]===1 && h.splitAces && !R.rsa),
+    canSurrender: R.surrender && n===2 && S.hands.length===1,
+  };
+}
+
+function finishHandIfNeeded(h){
+  const {t}=handValue(h.cards);
+  if(t>=21) h.done=true;
+  if(h.splitAces && h.cards.length>=2 && !R.hsa){
+    const canResplit = R.rsa && h.cards[0]===1 && h.cards[1]===1 && S.hands.length<R.max;
+    if(!canResplit) h.done=true;
+  }
+}
+
+function advance(){
+  if(!cur().done) return;
+  for(let i=S.active+1;i<S.hands.length;i++){ if(!S.hands[i].done){ S.active=i; return; } }
+  S.stage='over';
+}
+
+function buzz(){ try{ navigator.vibrate && navigator.vibrate(8); }catch(e){} }
+
+function tapCard(v){
+  snap(); buzz();
+  if(S.stage==='over'){ S=fresh(); }
+  if(S.stage==='p1'){ S.hands[0].cards.push(v); S.stage='p2'; }
+  else if(S.stage==='p2'){ S.hands[0].cards.push(v); S.stage='d'; }
+  else if(S.stage==='d'){
+    S.dealer=v; S.stage='play';
+    if(handValue(S.hands[0].cards).t===21){ S.hands[0].done=true; S.hands[0].bj=true; S.stage='over'; }
+  }
+  else if(S.stage==='play'){
+    const h=cur();
+    judge('H');
+    h.cards.push(v);
+    if(S.pendingDouble){ h.doubled=true; h.done=true; S.pendingDouble=false; }
+    finishHandIfNeeded(h);
+    advance();
+  }
+  render();
+}
+
+function act(a){
+  if(S.stage!=='play' || S.pendingDouble) return;
+  const h=cur(), c=caps(h);
+  if(h.cards.length<2) return;
+  const ok = a==='S' || (a==='D'&&c.canDouble) || (a==='R'&&c.canSurrender) || (a==='P'&&c.canSplit);
+  if(!ok) return;
+  snap(); judge(a); buzz();
+  if(a==='S'){ h.done=true; advance(); }
+  else if(a==='D'){ S.pendingDouble=true; }
+  else if(a==='R'){ h.done=true; h.surrendered=true; advance(); }
+  else if(a==='P'){
+    const aces=h.cards[0]===1;
+    const second=h.cards.pop();
+    h.fromSplit=true; h.splitAces=aces;
+    S.hands.splice(S.active+1,0,newHand([second],true,aces));
+  }
+  render();
+}
+
+/* ===================== RENDER ===================== */
+const $=id=>document.getElementById(id);
+function cardHTML(v){ return v==null?'<div class="c empty"></div>':`<div class="c">${lbl(v)}</div>`; }
+
+function render(){
+  $('rulesSum').textContent = rulesSummary();
+  $('dealer').innerHTML = cardHTML(S.dealer);
+  const multi=S.hands.length>1;
+  $('hands').innerHTML = S.hands.map((h,i)=>{
+    const {t,soft}=handValue(h.cards);
+    const active = S.stage==='play' && i===S.active;
+    const cards = h.cards.length? h.cards.map(cardHTML).join('') : cardHTML(null);
+    const placeholder = (S.stage==='p1'||S.stage==='p2') ? cardHTML(null) : '';
+    const totalTxt = h.cards.length? `${soft&&t<21?'Soft ':''}${t}` : '';
+    const status = h.bj?'Blackjack':h.surrendered?'Surrendered':t>21?'Bust':(h.done?'Stood':'')+(h.doubled?' · doubled':'');
+    return `<div class="hand ${active?'active':''}">
+      <div class="cards">${cards}${placeholder}</div>
+      <div class="tot meta">${multi?`Hand ${i+1}`:''}<b>${totalTxt}</b>${status}</div></div>`;
+  }).join('');
+  renderAdvice();
+  renderChart();
+  $('statsTxt').textContent = stats.plays
+    ? `Book plays this session: ${stats.book} of ${stats.plays} (${Math.round(100*stats.book/stats.plays)}%)`
+    : 'Book plays this session: none yet';
+  $('resetStats').hidden = !stats.plays;
+}
+
+function renderAdvice(){
+  const el=$('advice');
+  const btns={S:$('bS'),D:$('bD'),P:$('bP'),R:$('bR')};
+  Object.values(btns).forEach(b=>{b.disabled=true;b.classList.remove('rec');});
+  let pad='Tap a card';
+
+  if(S.stage==='p1'){ el.innerHTML=`<div class="prompt">Tap your first card</div><div class="why">Then your second card, then the dealer's up card.</div>`; pad='Your first card'; }
+  else if(S.stage==='p2'){ el.innerHTML=`<div class="prompt">Tap your second card</div>`; pad='Your second card'; }
+  else if(S.stage==='d'){ el.innerHTML=`<div class="prompt">Tap the dealer's up card</div>`; pad="Dealer's up card"; }
+  else if(S.stage==='over'){
+    const lines=S.hands.map((h,i)=>{
+      const {t}=handValue(h.cards);
+      const s = h.bj?'Blackjack':h.surrendered?'Surrendered':t>21?'Bust':`Stood on ${t}${h.doubled?' (doubled)':''}`;
+      return `<div>${S.hands.length>1?`Hand ${i+1}: `:''}${s}</div>`;
+    }).join('');
+    let extra='';
+    if(S.hands[0].bj && S.dealer===1) extra=`<div class="note">If you're offered even money, decline it. It's the same bet as insurance, and the book says never take it.</div>`;
+    el.innerHTML=`${mistakeHTML()}<div class="prompt">Round over</div>${lines}${extra}<div class="why" style="margin-top:var(--space-2)">Tap a card to start the next hand.</div>`;
+    pad='Next hand: your first card';
+  }
+  else {
+    const h=cur(), hn=S.hands.length>1?` · hand ${S.active+1}`:'';
+    if(h.cards.length<2){
+      el.innerHTML=`<div class="prompt">Tap the second card for hand ${S.active+1}</div><div class="why">Split hands are dealt one card at a time.</div>`;
+      pad=`Hand ${S.active+1}: second card`;
+    } else if(S.pendingDouble){
+      el.innerHTML=`<div class="prompt A-D">Doubled. Tap your one extra card.</div>`;
+      pad='Double-down card';
+    } else {
+      const c=caps(h), u=up();
+      const d=decide(h.cards,u,R,c);
+      const {t,soft}=handValue(h.cards);
+      const pair=h.cards.length===2&&h.cards[0]===h.cards[1];
+      const desc = (pair&&c.canSplit)?`Pair of ${lbl(h.cards[0])}s`:`${soft?'Soft':'Hard'} ${t}`;
+      let fb='';
+      if(d.fb) fb=`<div class="fb">${d.a==='D'?"If you can't double":"If surrender isn't offered"}: <b class="A-${d.fb}">${NAMES[d.fb]}</b></div>`;
+      if(d.forced) fb=`<div class="fb">The book says double, but you can't double here, so <b class="A-${d.a}">${NAMES[d.a].toLowerCase()}</b>.</div>`;
+      let note='';
+      if(d.note) note+=`<div class="note">${d.note}</div>`;
+      if(S.dealer===1 && h.cards.length===2 && S.hands.length===1) note+=`<div class="note">Dealer shows an Ace: never take insurance.</div>`;
+      const r=reason(h.cards,u,d);
+      el.innerHTML=`${mistakeHTML()}<div class="eyebrow">${desc} vs dealer ${lbl(S.dealer)}${hn}</div>
+        <div class="act A-${d.a}">${NAMES[d.a]}</div>${fb}${r?`<div class="why reason">${r}</div>`:''}${note}`;
+      btns.S.disabled=false; btns.D.disabled=!c.canDouble; btns.P.disabled=!c.canSplit; btns.R.disabled=!c.canSurrender;
+      if(btns[d.a]) btns[d.a].classList.add('rec');
+      pad = d.a==='H' ? 'Hit: tap the card you get' : 'Or tap a card to hit';
+    }
+  }
+  $('padLabel').textContent=pad;
+  $('undo').disabled=!undoStack.length;
+}
+
+function rulesSummary(){
+  const decks = R.decks===4?'4–8 decks':R.decks===1?'1 deck':'2 decks';
+  const dbl = R.dbl==='any'?'Double any 2':`Double ${R.dbl}`;
+  return [decks, R.h17?'H17':'S17', dbl, R.das?'DAS':'No DAS', R.surrender?'Surrender':'No surrender', R.enhc?'No hole card':'Dealer peeks'].join(' · ');
+}
+
+function renderChart(){
+  const ups=[2,3,4,5,6,7,8,9,10,11];
+  const o={canDouble:true,canSplit:true,canSurrender:R.surrender,chart:true};
+  const cell=(cards,u)=>{
+    const d=decide(cards,u,R,o);
+    let txt=d.a;
+    if(d.a==='D'||d.a==='R') txt=d.a+d.fb.toLowerCase();
+    return {k:d.a,txt};
+  };
+  let curKey=null;
+  if(S.stage==='play' && !S.pendingDouble && cur().cards.length>=2){
+    const h=cur(), c=caps(h), {t,soft}=handValue(h.cards);
+    if(h.cards.length===2 && h.cards[0]===h.cards[1] && c.canSplit) curKey='p'+h.cards[0];
+    else if(soft && t>=13 && t<=20) curKey='s'+t;
+    else if(!soft) curKey='h'+Math.min(17,Math.max(R.decks===1?7:8,t));
+    if(curKey) curKey += '_'+up();
+  }
+  const row=(key,label,cards)=>`<tr><th>${label}</th>${ups.map(u=>{const c=cell(cards,u);return `<td class="k-${c.k} ${curKey===key+'_'+u?'cur':''}">${c.txt}</td>`;}).join('')}</tr>`;
+  let html=`<tr><th style="width:15%"></th>${ups.map(u=>`<th>${u===11?'A':u}</th>`).join('')}</tr>`;
+  html+=`<tr class="sec"><th colspan="11">Hard totals</th></tr>`;
+  if(R.decks===1){ html+=row('h7','5–7',[2,5]); html+=row('h8','8',[2,6]); }
+  else html+=row('h8','5–8',[2,6]);
+  for(let t=9;t<=16;t++) html+=row('h'+t,String(t),t<=11?[2,t-2]:[10,t-10]);
+  html+=row('h17','17+',[10,7]);
+  html+=`<tr class="sec"><th colspan="11">Soft totals</th></tr>`;
+  for(let n=2;n<=9;n++) html+=row('s'+(11+n),`A,${n}`,[1,n]);
+  html+=`<tr class="sec"><th colspan="11">Pairs</th></tr>`;
+  html+=row('p1','A,A',[1,1]);
+  for(let n=10;n>=2;n--) html+=row('p'+n,`${n},${n}`,[n,n]);
+  $('chart').innerHTML=html;
+}
+
+/* ===================== WIRING ===================== */
+// Numpad order: 7 8 9 / 4 5 6 / A(1) 2 3 / 10 across the bottom like the 0 key
+$('pad').innerHTML=[7,8,9,4,5,6,1,2,3,10].map(v=>`<button data-v="${v}">${lbl(v)}${v===10?'<small>10 J Q K</small>':''}</button>`).join('');
+$('pad').addEventListener('click',e=>{const b=e.target.closest('button'); if(b) tapCard(+b.dataset.v);});
+$('bS').onclick=()=>act('S'); $('bD').onclick=()=>act('D'); $('bP').onclick=()=>act('P'); $('bR').onclick=()=>act('R');
+$('undo').onclick=()=>{ if(undoStack.length){ const u=JSON.parse(undoStack.pop()); S=u.S; stats=u.stats; render(); } };
+$('resetStats').onclick=()=>{ stats={plays:0,book:0}; render(); };
+$('newRound').onclick=()=>{ snap(); S=fresh(); render(); };
+
+const ruleMap={r_h17:'h17',r_das:'das',r_surrender:'surrender',r_enhc:'enhc',r_rsa:'rsa',r_hsa:'hsa'};
+$('rulesBtn').onclick=()=>{
+  for(const [id,k] of Object.entries(ruleMap)) $(id).checked=!!R[k];
+  $('r_max').value=String(R.max); $('r_decks').value=String(R.decks); $('r_dbl').value=R.dbl;
+  $('rulesDlg').showModal();
+};
+$('rulesDlg').addEventListener('change',()=>{
+  for(const [id,k] of Object.entries(ruleMap)) R[k]=$(id).checked;
+  R.max=+$('r_max').value; R.decks=+$('r_decks').value; R.dbl=$('r_dbl').value;
+  saveRules(); render();
+});
+$('rulesDone').onclick=()=>$('rulesDlg').close();
+
+/* ===================== PRACTICE MODE ===================== */
+const P={cards:[],up:2,answer:null,right:0,total:0,streak:0,best:0};
+function rank(){ const r=1+Math.floor(Math.random()*13); return r>10?10:r; } // 10/J/Q/K all count as 10
+function pCaps(){
+  const {t,soft}=handValue(P.cards);
+  return {canDouble:doubleAllowedTotal(R,t,soft), canSplit:P.cards[0]===P.cards[1], canSurrender:R.surrender};
+}
+function deal(){
+  const skip=$('pSkip').checked;
+  for(let i=0;i<1000;i++){
+    const a=rank(), b=rank(), d=rank();
+    const {t,soft}=handValue([a,b]), pair=a===b;
+    if(t===21) continue;
+    if(skip && !soft && !pair && (t<=8 || t>=17)) continue;
+    if(skip && pair && a===10) continue;
+    P.cards=[a,b]; P.up=d===1?11:d; P.answer=null; break;
+  }
+  renderPractice();
+}
+function answer(a){
+  if(P.answer) return;
+  const c=pCaps();
+  if((a==='D'&&!c.canDouble)||(a==='P'&&!c.canSplit)||(a==='R'&&!c.canSurrender)) return;
+  const d=decide(P.cards,P.up,R,c);
+  P.answer={a,book:d,ok:a===d.a};
+  P.total++;
+  if(P.answer.ok){ P.right++; P.streak++; P.best=Math.max(P.best,P.streak); } else P.streak=0;
+  buzz(); renderPractice();
+}
+function renderPractice(){
+  if(!P.cards.length) return;
+  const upl=P.up===11?'A':P.up;
+  $('pDealer').innerHTML=cardHTML(P.up===11?1:P.up);
+  $('pHand').innerHTML=P.cards.map(cardHTML).join('');
+  const c=pCaps(), {t,soft}=handValue(P.cards), pair=P.cards[0]===P.cards[1];
+  const desc=pair?`Pair of ${lbl(P.cards[0])}s`:`${soft?'Soft':'Hard'} ${t}`;
+  document.querySelectorAll('#pActions button').forEach(b=>{
+    const a=b.dataset.a;
+    b.disabled=(a==='D'&&!c.canDouble)||(a==='P'&&!c.canSplit)||(a==='R'&&!c.canSurrender);
+    b.classList.remove('right','wrong');
+    if(P.answer){ if(a===P.answer.book.a) b.classList.add('right'); else if(a===P.answer.a) b.classList.add('wrong'); }
+  });
+  if(!P.answer){
+    $('pAdvice').innerHTML=`<div class="eyebrow">${desc} vs dealer ${upl}</div><div class="prompt">What's the book play?</div>`;
+  } else {
+    const d=P.answer.book, r=reason(P.cards,P.up,d);
+    const fb=d.fb?`<div class="fb">${d.a==='D'?"If you can't double":"If surrender isn't offered"}: <b class="A-${d.fb}">${NAMES[d.fb]}</b></div>`:'';
+    $('pAdvice').innerHTML=`<div class="eyebrow">${desc} vs dealer ${upl}</div>
+      <div class="result ${P.answer.ok?'A-D':'A-R'}">${P.answer.ok?'Correct':'Not quite'}</div>
+      <div>The book play is <b class="A-${d.a}">${NAMES[d.a].toLowerCase()}</b>.</div>${fb}
+      ${r?`<div class="why reason">${r}</div>`:''}${d.note?`<div class="note">${d.note}</div>`:''}`;
+  }
+  $('pScore').textContent=P.total?`${P.right} of ${P.total} right · streak ${P.streak} · best ${P.best}`:'';
+}
+$('pActions').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) answer(b.dataset.a); });
+$('pNext').onclick=deal;
+$('pSkip').onchange=deal;
+$('rulesDlg').addEventListener('change',renderPractice);
+
+/* ===================== MODES + KEYBOARD ===================== */
+let mode='assist';
+try{ mode=localStorage.getItem('bj_mode')==='practice'?'practice':'assist'; }catch(e){}
+function setMode(m){
+  mode=m;
+  try{ localStorage.setItem('bj_mode',m); }catch(e){}
+  $('assistView').hidden = m!=='assist';
+  $('practiceView').hidden = m!=='practice';
+  document.querySelectorAll('.mode').forEach(b=>{ if(b.dataset.mode===m) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  if(m==='practice' && !P.cards.length) deal();
+}
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+
+const KEYMAP={'.':'S','s':'S','+':'D','d':'D','/':'P','*':'P','p':'P','-':'R','r':'R','h':'H'};
+document.addEventListener('keydown',e=>{
+  if($('rulesDlg').open || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k=e.key.toLowerCase();
+  if(mode==='practice'){
+    if(k==='enter' || (P.answer && (k===' '||k==='n'))){ e.preventDefault(); deal(); }
+    else if(KEYMAP[k]){ e.preventDefault(); answer(KEYMAP[k]); }
+    return;
+  }
+  if(k==='a'||k==='1') tapCard(1);
+  else if(/^[2-9]$/.test(k)) tapCard(+k);
+  else if(k.length===1 && '0tjqk'.includes(k)) tapCard(10);
+  else if(KEYMAP[k] && KEYMAP[k]!=='H'){ e.preventDefault(); act(KEYMAP[k]); }
+  else if(k==='u'||k==='backspace'){ e.preventDefault(); $('undo').click(); }
+  else if(k==='n'||k==='enter'){ e.preventDefault(); $('newRound').click(); }
+});
+
+render();
+setMode(mode);
+</script>
+</body>
+</html>
