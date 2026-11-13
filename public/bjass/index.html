@@ -103,6 +103,12 @@ summary::marker{color:var(--gold)}
 .legend{font-size:var(--step--2);color:var(--ink-soft);margin-top:var(--space-3);line-height:1.7}
 button{touch-action:manipulation}
 .modes{display:flex;gap:var(--space-4)}
+.order{flex-basis:100%;display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin-top:var(--space-3)}
+.order button{background:var(--canvas);border:0;padding:var(--space-2) var(--space-3);font-family:var(--font-mono);font-size:var(--step--2);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);display:flex;justify-content:center;align-items:baseline;gap:var(--space-2);flex-wrap:wrap}
+.order[hidden]{display:none}
+.order button+button{border-left:1px solid var(--rule)}
+.order button span{text-transform:none;letter-spacing:.02em;opacity:.75}
+.order button[aria-pressed="true"]{background:var(--ink);color:var(--canvas)}
 .mode[aria-current="page"]{color:var(--accent);text-decoration-color:currentColor;text-decoration-thickness:2px}
 .reason{margin-top:var(--space-2);font-size:var(--step--1)}
 .miss{margin-bottom:var(--space-3);padding:var(--space-2) var(--space-3);border-radius:6px;background:var(--t-R);font-size:var(--step--1)}
@@ -131,9 +137,13 @@ dialog h2{font-family:var(--font-display);font-weight:600;font-size:var(--step-2
   <span class="name">Blackjack Assistant</span>
   <nav class="modes" aria-label="Mode">
     <button class="linkbtn mode" data-mode="assist">Assistant</button>
-    <button class="linkbtn mode" data-mode="practice">Practice</button>
+    <button class="linkbtn mode" data-mode="practice">Drill</button>
     <button class="linkbtn" id="rulesBtn">Rules</button>
   </nav>
+  <div class="order" id="orderSwitch" role="group" aria-label="Card entry order">
+    <button data-order="practice" title="Enter your card, your card, then the dealer's card">Practice <span>me · me · dealer</span></button>
+    <button data-order="live" title="Enter your card, the dealer's card, then your card (real deal order)">Live <span>me · dealer · me</span></button>
+  </div>
   <div class="rule" aria-hidden="true"></div>
   <div class="meta" id="rulesSum" style="flex-basis:100%"></div>
 </header>
@@ -467,11 +477,13 @@ function buzz(){ try{ navigator.vibrate && navigator.vibrate(8); }catch(e){} }
 function tapCard(v){
   snap(); buzz();
   if(S.stage==='over'){ S=fresh(); }
-  if(S.stage==='p1'){ S.hands[0].cards.push(v); S.stage='p2'; }
-  else if(S.stage==='p2'){ S.hands[0].cards.push(v); S.stage='d'; }
-  else if(S.stage==='d'){
-    S.dealer=v; S.stage='play';
-    if(handValue(S.hands[0].cards).t===21){ S.hands[0].done=true; S.hands[0].bj=true; S.stage='over'; }
+  // Entry order: Live = me, dealer, me · Practice = me, me, dealer.
+  // Each step looks at what's already filled in, so switching order mid-deal still works.
+  if(S.stage==='p1'||S.stage==='d'||S.stage==='p2'){
+    if(S.stage==='p1'){ S.hands[0].cards.push(v); S.stage = ORDER==='live' ? 'd' : 'p2'; }
+    else if(S.stage==='d'){ S.dealer=v; S.stage = S.hands[0].cards.length>=2 ? 'play' : 'p2'; }
+    else { S.hands[0].cards.push(v); S.stage = S.dealer!=null ? 'play' : 'd'; }
+    if(S.stage==='play' && handValue(S.hands[0].cards).t===21){ S.hands[0].done=true; S.hands[0].bj=true; S.stage='over'; }
   }
   else if(S.stage==='play'){
     const h=cur();
@@ -515,7 +527,7 @@ function render(){
     const {t,soft}=handValue(h.cards);
     const active = S.stage==='play' && i===S.active;
     const cards = h.cards.length? h.cards.map(cardHTML).join('') : cardHTML(null);
-    const placeholder = (S.stage==='p1'||S.stage==='p2') ? cardHTML(null) : '';
+    const placeholder = (S.stage==='p1'||S.stage==='d'||S.stage==='p2') ? cardHTML(null) : '';
     const totalTxt = h.cards.length? `${soft&&t<21?'Soft ':''}${t}` : '';
     const status = h.bj?'Blackjack':h.surrendered?'Surrendered':t>21?'Bust':(h.done?'Stood':'')+(h.doubled?' · doubled':'');
     return `<div class="hand ${active?'active':''}">
@@ -536,7 +548,7 @@ function renderAdvice(){
   Object.values(btns).forEach(b=>{b.disabled=true;b.classList.remove('rec');});
   let pad='Tap a card';
 
-  if(S.stage==='p1'){ el.innerHTML=`<div class="prompt">Tap your first card</div><div class="why">Then your second card, then the dealer's up card.</div>`; pad='Your first card'; }
+  if(S.stage==='p1'){ el.innerHTML=`<div class="prompt">Tap your first card</div><div class="why">${ORDER==='live'?"Then the dealer's up card, then your second card.":"Then your second card, then the dealer's up card."}</div>`; pad='Your first card'; }
   else if(S.stage==='p2'){ el.innerHTML=`<div class="prompt">Tap your second card</div>`; pad='Your second card'; }
   else if(S.stage==='d'){ el.innerHTML=`<div class="prompt">Tap the dealer's up card</div>`; pad="Dealer's up card"; }
   else if(S.stage==='over'){
@@ -704,8 +716,21 @@ $('rulesDlg').addEventListener('change',renderPractice);
 /* ===================== MODES + KEYBOARD ===================== */
 let mode='assist';
 try{ mode=localStorage.getItem('bj_mode')==='practice'?'practice':'assist'; }catch(e){}
+let ORDER='live';
+try{ ORDER=localStorage.getItem('bj_order')==='practice'?'practice':'live'; }catch(e){}
+function setOrder(o){
+  ORDER=o;
+  try{ localStorage.setItem('bj_order',o); }catch(e){}
+  document.querySelectorAll('#orderSwitch button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.order===o?'true':'false'));
+  // Mid-deal with only your first card in: jump to whichever card the new order asks for next
+  if((S.stage==='d'||S.stage==='p2') && S.dealer==null && S.hands[0].cards.length===1) S.stage = o==='live' ? 'd' : 'p2';
+  render();
+}
+document.querySelectorAll('#orderSwitch button').forEach(b=>b.onclick=()=>setOrder(b.dataset.order));
+
 function setMode(m){
   mode=m;
+  $('orderSwitch').hidden = m!=='assist';
   try{ localStorage.setItem('bj_mode',m); }catch(e){}
   $('assistView').hidden = m!=='assist';
   $('practiceView').hidden = m!=='practice';
@@ -731,7 +756,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='n'||k==='enter'){ e.preventDefault(); $('newRound').click(); }
 });
 
-render();
+setOrder(ORDER);
 setMode(mode);
 </script>
 </body>
