@@ -71,6 +71,23 @@ main{padding-block:var(--space-6) var(--space-8)}
 .act{font-family:var(--font-display);font-size:var(--step-4);font-weight:600;letter-spacing:-.015em;line-height:1.05;margin:var(--space-1) 0 var(--space-2)}
 .why{color:var(--ink-soft)}
 .fb{margin-top:var(--space-1);font-size:var(--step--1)}
+.odds{margin-top:var(--space-4);padding-top:var(--space-3);border-top:1px solid var(--rule)}
+.oddshead{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--step--1);color:var(--ink-soft)}
+.oddshead b{font-family:var(--font-display);font-size:var(--step-3);color:var(--ink);font-variant-numeric:lining-nums}
+.bar{display:flex;height:6px;border-radius:3px;overflow:hidden;margin:var(--space-2) 0 var(--space-3);background:var(--rule)}
+.bar i{display:block;height:100%} .bar .w{background:var(--a-D)} .bar .p{background:var(--gold)} .bar .l{background:var(--a-R)}
+.odds table{width:100%;border-collapse:collapse;font-size:var(--step--1);font-variant-numeric:lining-nums tabular-nums}
+.odds th{font-family:var(--font-mono);font-size:var(--step--2);font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);text-align:right;padding:0 0 var(--space-1)}
+.odds td{text-align:right;padding:5px 0;border-top:1px solid var(--rule)}
+.odds th:first-child,.odds td:first-child{text-align:left}
+.odds td small{color:var(--ink-soft);font-weight:400}
+.odds td.sub{color:var(--ink-soft);text-align:center}
+.odds tr.rec td{font-weight:700}
+.odds tr.rec td:first-child::after{content:" ✓";color:var(--ink-soft);font-weight:400}
+.oddsnote{margin-top:var(--space-2);color:var(--ink-soft)}
+#oddsMore summary{cursor:pointer;color:var(--ink-soft);width:max-content}
+#oddsMore[open] summary{margin-bottom:var(--space-2)}
+.bar{margin-bottom:var(--space-2)}
 .note{margin-top:var(--space-3);padding-left:var(--space-3);border-left:2px solid var(--gold);font-size:var(--step--1);color:var(--ink-soft)}
 .prompt{font-family:var(--font-display);font-size:var(--step-2);font-weight:600;margin:var(--space-1) 0}
 .A-H{color:var(--a-H)} .A-S{color:var(--a-S)} .A-D{color:var(--a-D)} .A-P{color:var(--a-P)} .A-R{color:var(--a-R)}
@@ -526,6 +543,134 @@ function act(a){
   render();
 }
 
+/* ===================== ODDS ===================== */
+// Win / push / lose chances for each play from here.
+// Card chances come from the shoe with every card on the table removed; later draws reuse those chances.
+// After the first move, the hand is played to the best expected result (hit or stand).
+function shoeProbs(seen){
+  const decks = R.decks===4 ? 6 : R.decks;
+  const n = Array(11).fill(0);
+  for(let v=1;v<=9;v++) n[v]=4*decks;
+  n[10]=16*decks;
+  seen.forEach(v=>{ if(v!=null && n[v]>0) n[v]--; });
+  const tot=n.reduce((a,b)=>a+b,0);
+  return n.map(x=>x/tot);
+}
+const tot = (hard,ace) => ace && hard+10<=21 ? hard+10 : hard;
+
+// Dealer final totals: [17,18,19,20,21,bust,blackjack]
+function dealerDist(p,upv){
+  const memo=new Map();
+  function go(hard,ace){
+    const t=tot(hard,ace), soft=ace&&hard+10<=21;
+    if(t>21) return [0,0,0,0,0,1];
+    if(t>17 || (t===17 && !(soft&&R.h17))){ const r=[0,0,0,0,0,0]; r[t-17]=1; return r; }
+    const k=hard*2+(ace?1:0);
+    if(memo.has(k)) return memo.get(k);
+    const r=[0,0,0,0,0,0];
+    for(let v=1;v<=10;v++){ if(!p[v]) continue; const s=go(hard+v,ace||v===1); for(let i=0;i<6;i++) r[i]+=p[v]*s[i]; }
+    memo.set(k,r); return r;
+  }
+  let q=p.slice();
+  if(!R.enhc && (upv===1||upv===10)){ // dealer has peeked: no blackjack
+    const bad=upv===1?10:1, z=1-q[bad];
+    q=q.map((x,i)=>i===bad?0:x/z);
+  }
+  const out=[0,0,0,0,0,0,0];
+  for(let v=1;v<=10;v++){
+    if(!q[v]) continue;
+    if((upv===1&&v===10)||(upv===10&&v===1)){ out[6]+=q[v]; continue; }
+    const s=go(upv+v, upv===1||v===1);
+    for(let i=0;i<6;i++) out[i]+=q[v]*s[i];
+  }
+  return out;
+}
+
+function oddsFor(h){
+  const p=shoeProbs([S.dealer, ...S.hands.flatMap(x=>x.cards)]);
+  const D=dealerDist(p,S.dealer);
+  const ev = r => r[0]-r[2];
+  const stand = t => {
+    if(t>21) return [0,0,1];
+    let w=D[5], pu=0, l=D[6];
+    for(let i=0;i<5;i++){ const d=17+i; if(t>d) w+=D[i]; else if(t===d) pu+=D[i]; else l+=D[i]; }
+    return [w,pu,l];
+  };
+  const memo=new Map();
+  function best(hard,ace){
+    const t=tot(hard,ace);
+    if(t>21) return [0,0,1];
+    const k=hard*2+(ace?1:0);
+    if(memo.has(k)) return memo.get(k);
+    const s=stand(t), r = t===21 ? s : (()=>{ const hh=hit(hard,ace); return ev(hh)>ev(s)?hh:s; })();
+    memo.set(k,r); return r;
+  }
+  function hit(hard,ace){
+    const r=[0,0,0];
+    for(let v=1;v<=10;v++){ if(!p[v]) continue; const b=best(hard+v,ace||v===1); for(let i=0;i<3;i++) r[i]+=p[v]*b[i]; }
+    return r;
+  }
+  function dbl(hard,ace){
+    const r=[0,0,0];
+    for(let v=1;v<=10;v++){ if(!p[v]) continue; const b=stand(tot(hard+v,ace||v===1)); for(let i=0;i<3;i++) r[i]+=p[v]*b[i]; }
+    return r;
+  }
+  const hard=h.cards.reduce((a,b)=>a+b,0), ace=h.cards.includes(1);
+  const c=caps(h);
+  const o={ S:{wpl:stand(tot(hard,ace))}, H:{wpl:hit(hard,ace)} };
+  o.S.ev=ev(o.S.wpl); o.H.ev=ev(o.H.wpl);
+  if(c.canDouble){ o.D={wpl:dbl(hard,ace)}; o.D.ev=2*ev(o.D.wpl); }
+  if(c.canSplit){
+    const cv=h.cards[0], r=[0,0,0];
+    for(let v=1;v<=10;v++){
+      if(!p[v]) continue;
+      const hd=cv+v, ac=cv===1||v===1;
+      let b;
+      if(cv===1 && !R.hsa) b=stand(tot(hd,ac));
+      else {
+        b=best(hd,ac);
+        if(R.das && doubleAllowedTotal(R,tot(hd,ac),ac&&hd+10<=21)){ const d=dbl(hd,ac); if(2*ev(d)>ev(b)) b=d; }
+      }
+      for(let i=0;i<3;i++) r[i]+=p[v]*b[i];
+    }
+    o.P={wpl:r, ev:2*ev(r)};
+  }
+  if(c.canSurrender) o.R={ev:-0.5};
+  return o;
+}
+
+function pct(x){ const n=x*100; return n>0 && n<0.5 ? '<1%' : `${Math.round(n)}%`; }
+function money(ev){ const p=Math.round(ev*100); return p===0 ? '0p' : `${p>0?'+':'−'}${Math.abs(p)}p`; }
+
+function oddsHTML(h,d){
+  const o=oddsFor(h);
+  const recA = o[d.a] ? d.a : (d.fb && o[d.fb] ? d.fb : 'S');
+  const main=o[recA];
+  const head = main.wpl
+    ? `<div class="oddshead"><span>Chance of winning</span><b>${pct(main.wpl[0])}</b></div>
+       <div class="bar" aria-hidden="true"><i class="w" style="width:${main.wpl[0]*100}%"></i><i class="p" style="width:${main.wpl[1]*100}%"></i><i class="l" style="width:${main.wpl[2]*100}%"></i></div>`
+    : `<div class="oddshead"><span>Surrender</span><b>half back</b></div>`;
+  const order=['H','S','D','P','R'].filter(a=>o[a]);
+  const rows=order.map(a=>{
+    const x=o[a], label=a==='P'?'Split <small>(each hand)</small>':NAMES[a].replace(' down','');
+    const cells = x.wpl ? `<td>${pct(x.wpl[0])}</td><td>${pct(x.wpl[1])}</td><td>${pct(x.wpl[2])}</td>` : `<td colspan="3" class="sub">get half your bet back</td>`;
+    return `<tr class="${a===recA?'rec':''}"><td class="A-${a}">${label}</td>${cells}<td>${money(x.ev)}</td></tr>`;
+  }).join('');
+  return `<div class="odds">${head}
+    <details id="oddsMore"${oddsOpen?' open':''}><summary class="meta">All plays</summary>
+    <table><thead><tr><th>Play</th><th>Win</th><th>Push</th><th>Lose</th><th title="Average result per £1 bet">Per £1</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="meta oddsnote">Based on the cards left in the shoe, playing by the book from here. "Per £1" is the average result per £1 of your starting bet.</div></details></div>`;
+}
+let oddsOpen=false;
+try{ oddsOpen = localStorage.getItem('bj_odds_open')==='1'; }catch(e){}
+// Remember the "All plays" toggle. Read on click, because the page can re-render before the toggle event fires.
+document.addEventListener('click', e=>{
+  const s=e.target.closest && e.target.closest('#oddsMore > summary');
+  if(!s) return;
+  oddsOpen=!s.parentElement.open;
+  try{ localStorage.setItem('bj_odds_open', oddsOpen?'1':'0'); }catch(err){}
+});
+
 /* ===================== RENDER ===================== */
 const $=id=>document.getElementById(id);
 function cardHTML(v){ return v==null?'<div class="c empty"></div>':`<div class="c">${lbl(v)}</div>`; }
@@ -596,7 +741,7 @@ function renderAdvice(){
       if(S.dealer===1 && h.cards.length===2 && S.hands.length===1) note+=`<div class="note">Dealer shows an Ace: never take insurance.</div>`;
       const r=reason(h.cards,u,d);
       el.innerHTML=`${mistakeHTML()}<div class="eyebrow">${desc} vs dealer ${lbl(S.dealer)}${hn}</div>
-        <div class="act A-${d.a}">${NAMES[d.a]}</div>${fb}${r?`<div class="why reason">${r}</div>`:''}${note}
+        <div class="act A-${d.a}">${NAMES[d.a]}</div>${fb}${r?`<div class="why reason">${r}</div>`:''}${note}${oddsHTML(h,d)}
         ${S.hands.some((_,i)=>canPick(i))?'<div class="meta pickhint">Tap another hand above to switch to it.</div>':''}`;
       btns.S.disabled=false; btns.D.disabled=!c.canDouble; btns.P.disabled=!c.canSplit; btns.R.disabled=!c.canSurrender;
       if(btns[d.a]) btns[d.a].classList.add('rec');
