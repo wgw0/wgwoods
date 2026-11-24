@@ -2,6 +2,7 @@
 title: 'Europe has the engineers. So why is Ukraine still waiting on Washington?'
 description: 'The missile gap is less about technology than about the organisations that turn designs into stockpiles'
 pubDate: '2026-11-24'
+originalUrl: 'https://wgw0.substack.com/p/europe-has-the-engineers-so-why-is'
 ---
 
 I asked a fairly naive question recently. If Ukraine needs Patriot interceptors and only the United States makes them, why doesn't Europe just make its own? Europe isn't short of clever people. MBDA, Thales, Saab and Diehl design some of the best missiles in the world, and Europe already has a Patriot equivalent in the Franco-Italian SAMP/T and its Aster 30 interceptor.
