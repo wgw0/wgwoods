@@ -2,7 +2,7 @@
 // Google Tag Manager: the page-context dataLayer push followed by the container loader.
 // Goes at the top of <head>, so page data is in the dataLayer before gtm.js reads it.
 // Tracking only runs in production builds (astro build / preview), never in `astro dev`.
-import { GTM_ID } from '../consts';
+import { GTM_ID, GTM_PATH } from '../consts';
 
 export type PageData = {
 	page_type: string;
@@ -19,11 +19,14 @@ interface Props {
 
 const { page } = Astro.props;
 const enabled = Boolean(GTM_ID) && import.meta.env.PROD;
+// Through Cloudflare's tag gateway the container loads from our own domain, so blockers keyed on
+// googletagmanager.com or "gtm.js" don't stop it.
+const src = GTM_PATH ? `${GTM_PATH}/?id=` : 'https://www.googletagmanager.com/gtm.js?id=';
 ---
 
 {
 	enabled && (
-		<script is:inline define:vars={{ gtmId: GTM_ID, page }}>
+		<script is:inline define:vars={{ gtmId: GTM_ID, page, src }}>
 			window.dataLayer = window.dataLayer || [];
 			window.dataLayer.push(page);
 			(function (w, d, s, l, i) {
@@ -33,7 +36,7 @@ const enabled = Boolean(GTM_ID) && import.meta.env.PROD;
 					j = d.createElement(s),
 					dl = l != 'dataLayer' ? '&l=' + l : '';
 				j.async = true;
-				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				j.src = src + i + dl;
 				f.parentNode.insertBefore(j, f);
 			})(window, document, 'script', 'dataLayer', gtmId);
 		</script>

@@ -11,7 +11,7 @@ those pushes into GA4 events.
 
 ## Where it lives
 
-- `src/consts.ts`: `GTM_ID`. Empty it to switch tracking off.
+- `src/consts.ts`: `GTM_ID` (empty it to switch tracking off) and `GTM_PATH`.
 - `src/components/Analytics.astro`: page-context push plus the GTM loader, first thing in `<head>`.
   Only renders in production builds (`astro build` / `astro preview`), never in `astro dev`.
 - `src/layouts/Base.astro`: works out `page_type`, adds the `<noscript>` iframe, loads the event script.
@@ -19,6 +19,16 @@ those pushes into GA4 events.
 - `public/bjass/index.html`: static page with its own copy of the snippet (`page_type: tool`).
 - `analytics/gtm-container.json`: the GTM tags, trigger and variables as an import file. If you
   change GTM, export the container and replace this file so the repo stays the source of truth.
+
+## First-party serving (Cloudflare Google tag gateway)
+
+Cloudflare's Google tag gateway is on for wgwoods.co.uk (Cloudflare dashboard > Web tag management >
+wgwoods.co.uk > Google Tag Gateway; free on the Free plan). It proxies Google's tag and GA4 hits
+through `https://wgwoods.co.uk/k9q4/`, a deliberately meaningless path so filter lists don't
+match it. The site loads the container from `/k9q4/?id=GTM-K7MM3TR9` (no `gtm.js` in the URL), and
+that copy sends GA4 hits back through the same path. `GTM_PATH` in `src/consts.ts` and the copy in
+`public/bjass/index.html` must match the path set in Cloudflare. The `<noscript>` iframe still points
+at googletagmanager.com because the gateway doesn't serve `ns.html`.
 
 No consent banner: GA4 sets cookies on first load. Add Consent Mode v2 and a banner if that changes.
 

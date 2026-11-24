@@ -10,3 +10,6 @@ export const SUBSTACK_URL = 'https://wgw0.substack.com';
 export const SITE_URL_LINKEDIN_SHORT = 'https://wgwoods.co.uk/linkedin';
 // Google Tag Manager container. Tracking is off while this is empty, and never runs in `astro dev`.
 export const GTM_ID = 'GTM-K7MM3TR9';
+// First-party path for GTM and GA4, served by Cloudflare's Google tag gateway (see ANALYTICS.md).
+// Must match the measurement path set in Cloudflare. Empty to load from googletagmanager.com.
+export const GTM_PATH = '/k9q4';
