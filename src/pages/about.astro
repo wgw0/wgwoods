@@ -21,7 +21,7 @@ import Base from '../layouts/Base.astro';
 		/>
 		<div>
 			<h1>About</h1>
-			<div class="prose">
+			<div class="prose" data-link-location="about_bio">
 				<p>
 					I'm William Woods, a Senior Analyst. I support organisations through technology,
 					analytics and advisory projects, helping teams improve performance, solve complex problems
@@ -50,7 +50,7 @@ import Base from '../layouts/Base.astro';
 				</p>
 			</div>
 
-			<section class="experience" aria-labelledby="experience-heading">
+			<section class="experience" aria-labelledby="experience-heading" data-link-location="about_experience">
 				<h2 id="experience-heading">Experience</h2>
 				{
 					experience.map((employer) => (

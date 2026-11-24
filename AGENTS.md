@@ -28,3 +28,4 @@ Consult these guides before working on related tasks:
 - Requires Node >= 22.23.4. If the installed Node is older, run Astro via
   `npx -y -p node@22 node node_modules/astro/bin/astro.mjs <command>`, and install
   dependencies with that Node too, or npm silently skips native optional packages.
+- Analytics: GTM + GA4, spec and IDs in `ANALYTICS.md`. Tracking only renders in production builds.

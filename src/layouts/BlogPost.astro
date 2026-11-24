@@ -10,7 +10,18 @@ type Props = CollectionEntry<'blog'>['data'] & { id: string; readingMinutes: num
 const { id, title, description, pubDate, updatedDate, heroImage, originalUrl, readingMinutes } = Astro.props;
 ---
 
-<Base title={title} description={description} ogImage={`/og/${id}.png`}>
+<Base
+	title={title}
+	description={description}
+	ogImage={`/og/${id}.png`}
+	pageType="blog_post"
+	pageData={{
+		article_id: id,
+		article_title: title,
+		article_publish_date: pubDate.toISOString().slice(0, 10),
+		article_reading_minutes: readingMinutes,
+	}}
+>
 	<div class="progress" aria-hidden="true"><span></span></div>
 	<article>
 		<header>
@@ -29,17 +40,17 @@ const { id, title, description, pubDate, updatedDate, heroImage, originalUrl, re
 			</p>
 		</header>
 		{heroImage && <Image class="hero" width={1200} height={630} src={heroImage} alt="" />}
-		<div class="prose">
+		<div class="prose" data-article-body data-link-location="article_body">
 			<slot />
 		</div>
 		{
 			originalUrl && (
-				<p class="origin">
+				<p class="origin" data-link-location="article_origin">
 					Originally published on <a href={originalUrl}>Substack</a>.
 				</p>
 			)
 		}
-		<section class="subscribe" aria-labelledby="subscribe-heading">
+		<section class="subscribe" aria-labelledby="subscribe-heading" data-subscribe-embed>
 			<h2 id="subscribe-heading">Get new writing by email</h2>
 			<p>New posts go out through my Substack.</p>
 			<iframe
@@ -50,7 +61,7 @@ const { id, title, description, pubDate, updatedDate, heroImage, originalUrl, re
 				scrolling="no"
 			></iframe>
 		</section>
-		<p class="back"><a href="/blog">More writing</a></p>
+		<p class="back" data-link-location="article_footer"><a href="/blog">More writing</a></p>
 	</article>
 </Base>
 

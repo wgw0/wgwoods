@@ -1,29 +1,62 @@
 ---
+import Analytics, { type PageData } from '../components/Analytics.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import { GTM_ID } from '../consts';
 
 interface Props {
 	title: string;
 	description: string;
 	noindex?: boolean;
 	ogImage?: string;
+	pageType?: string; // dataLayer page_type; defaults from the URL
+	pageData?: Partial<PageData>; // extra dataLayer page fields, e.g. article details
 }
-const { title, description, noindex, ogImage } = Astro.props;
+const { title, description, noindex, ogImage, pageType, pageData } = Astro.props;
+
+// page_type for the dataLayer, worked out from the path unless the page sets one.
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const inferredType =
+	path === '/' ? 'home' : path === '/blog' ? 'blog_index' : path.startsWith('/blog/') ? 'blog_post' : path.slice(1).replace(/\//g, '_');
+const type = pageType ?? inferredType;
+const page: PageData = {
+	page_type: type,
+	content_group: type === 'blog_post' || type === 'blog_index' ? 'writing' : type === 'home' ? 'home' : 'site',
+	...pageData,
+};
+const gtmEnabled = Boolean(GTM_ID) && import.meta.env.PROD;
 ---
 
 <!doctype html>
 <html lang="en-GB">
 	<head>
+		<meta charset="utf-8" />
+		<Analytics page={page} />
 		<BaseHead title={title} description={description} ogImage={ogImage} />
 		{noindex && <meta name="robots" content="noindex" />}
 	</head>
 	<body>
+		{
+			gtmEnabled && (
+				<noscript>
+					<iframe
+						src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+						height="0"
+						width="0"
+						style="display:none;visibility:hidden"
+					/>
+				</noscript>
+			)
+		}
 		<a class="skip sr-only" href="#content">Skip to content</a>
 		<Header />
 		<main id="content" class="page">
 			<slot />
 		</main>
 		<Footer />
+		<script>
+			import '../scripts/analytics';
+		</script>
 	</body>
 </html>

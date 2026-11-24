@@ -1,0 +1,41 @@
+---
+// Google Tag Manager: the page-context dataLayer push followed by the container loader.
+// Goes at the top of <head>, so page data is in the dataLayer before gtm.js reads it.
+// Tracking only runs in production builds (astro build / preview), never in `astro dev`.
+import { GTM_ID } from '../consts';
+
+export type PageData = {
+	page_type: string;
+	content_group: string;
+	article_id?: string;
+	article_title?: string;
+	article_publish_date?: string;
+	article_reading_minutes?: number;
+};
+
+interface Props {
+	page: PageData;
+}
+
+const { page } = Astro.props;
+const enabled = Boolean(GTM_ID) && import.meta.env.PROD;
+---
+
+{
+	enabled && (
+		<script is:inline define:vars={{ gtmId: GTM_ID, page }}>
+			window.dataLayer = window.dataLayer || [];
+			window.dataLayer.push(page);
+			(function (w, d, s, l, i) {
+				w[l] = w[l] || [];
+				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+				var f = d.getElementsByTagName(s)[0],
+					j = d.createElement(s),
+					dl = l != 'dataLayer' ? '&l=' + l : '';
+				j.async = true;
+				j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+				f.parentNode.insertBefore(j, f);
+			})(window, document, 'script', 'dataLayer', gtmId);
+		</script>
+	)
+}

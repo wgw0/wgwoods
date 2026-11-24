@@ -8,7 +8,7 @@ interface Props {
 const { posts, dateFormat = 'long' } = Astro.props;
 ---
 
-<ul class="posts">
+<ul class="posts" data-link-location="post_list">
 	{
 		posts.map((post) => (
 			<li>

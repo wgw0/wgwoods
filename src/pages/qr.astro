@@ -12,8 +12,8 @@ const shortLink = SITE_URL_LINKEDIN_SHORT.replace('https://', '');
 	<section class="qr">
 		<h1>Connect on LinkedIn</h1>
 		<div class="code" role="img" aria-label={`QR code linking to ${shortLink}`} set:html={svg} />
-		<p class="link"><a href={SITE_URL_LINKEDIN_SHORT}>{shortLink}</a></p>
-		<p class="download"><a href="/qr-linkedin.svg" download="william-woods-linkedin-qr.svg">Download QR code (SVG)</a></p>
+		<p class="link" data-link-location="qr_page"><a href={SITE_URL_LINKEDIN_SHORT}>{shortLink}</a></p>
+		<p class="download" data-link-location="qr_page"><a href="/qr-linkedin.svg" download="william-woods-linkedin-qr.svg">Download QR code (SVG)</a></p>
 	</section>
 </Base>
 

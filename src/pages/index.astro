@@ -21,7 +21,7 @@ const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/$
 ---
 
 <Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<section class="intro">
+	<section class="intro" data-link-location="home_intro">
 		<h1>I write about people, culture, and how organisations change.</h1>
 		<p>
 			I'm William Woods, a Senior Analyst. My lens is defence and security: what makes
@@ -31,7 +31,7 @@ const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/$
 
 	<section aria-labelledby="latest">
 		<h2 id="latest" class="section-title">Latest briefing</h2>
-		<a class="briefing" href={`/blog/${latest.id}/`}>
+		<a class="briefing" data-link-location="home_latest" href={`/blog/${latest.id}/`}>
 			{
 				cardImage && (
 					<Image

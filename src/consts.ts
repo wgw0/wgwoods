@@ -8,3 +8,5 @@ export const LINKEDIN_URL = 'https://www.linkedin.com/in/w-woods/';
 export const SUBSTACK_URL = 'https://wgw0.substack.com';
 // Permanent short link used by the QR code; its destination is set in public/_redirects.
 export const SITE_URL_LINKEDIN_SHORT = 'https://wgwoods.co.uk/linkedin';
+// Google Tag Manager container. Tracking is off while this is empty, and never runs in `astro dev`.
+export const GTM_ID = 'GTM-K7MM3TR9';
