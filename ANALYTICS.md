@@ -26,7 +26,10 @@ Cloudflare's Google tag gateway is on for wgwoods.co.uk (Cloudflare dashboard > 
 wgwoods.co.uk > Google Tag Gateway; free on the Free plan). It proxies Google's tag and GA4 hits
 through `https://wgwoods.co.uk/k9q4/`, a deliberately meaningless path so filter lists don't
 match it. The site loads the container from `/k9q4/?id=GTM-K7MM3TR9` (no `gtm.js` in the URL), and
-that copy sends GA4 hits back through the same path. `GTM_PATH` in `src/consts.ts` and the copy in
+the GA4 library loads through the same path. The gateway shows Active in both GTM containers
+(`GTM-K7MM3TR9` and the GA4 Google tag's `GTM-PFCNC54H`) and accepts hits at `/k9q4/g/collect`,
+but as of 24 Nov 2026 the GA4 hits themselves still go to `region1.google-analytics.com`; check
+whether Google has switched them over. `GTM_PATH` in `src/consts.ts` and the copy in
 `public/bjass/index.html` must match the path set in Cloudflare. The `<noscript>` iframe still points
 at googletagmanager.com because the gateway doesn't serve `ns.html`.
 
