@@ -218,6 +218,7 @@ time {
 }
 .prose img {
 	border-radius: 16px;
+	margin-inline: auto;
 }
 .prose hr {
 	border: 0;

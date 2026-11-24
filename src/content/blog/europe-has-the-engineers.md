@@ -38,9 +38,9 @@ Seen that way, thirty years of small orders didn't only shrink Europe's factorie
 
 The comparison with the US is useful here, and not for the reason people usually give. In January Lockheed and the Pentagon agreed a seven-year framework to take PAC-3 MSE production from about 600 a year to about 2,000, and in July the Army [put $58.62 billion behind it](https://news.lockheedmartin.com/2026-07-29-Department-of-War-Awards-Lockheed-Martin-58-62B-for-Multiyear-PAC-3-MSE-Production-to-Strengthen-the-Arsenal-of-Freedom) in a multiyear contract. Lockheed delivered 620 interceptors in 2025 and says it expects to reach the higher rate by the end of 2030. Boeing got a roughly $14.7 billion subcontract for seven years of seekers off the back of it.
 
-![Industrial buildings and grounds of a rocket motor plant in Arkansas](../../assets/blog/europe-has-the-engineers/camden-rocket-motor-plant.jpg)
+![Steel frames of new factory buildings rising from a cleared site, with a crane alongside](../../assets/blog/europe-has-the-engineers/camden-rocket-motor-plant.jpg)
 
-*The solid rocket motor facility led by Lockheed Martin and General Dynamics at Camden, Arkansas, February 2026. US Navy photo by Petty Officer 1st Class Alexander Kubitza (public domain).*
+*A new solid rocket motor plant under construction at Camden, Arkansas, in February 2026, led by Lockheed Martin and General Dynamics. This is what a long-term order looks like on the ground. US Navy photo by Petty Officer 1st Class Alexander Kubitza (public domain).*
 
 What that describes is one very large customer signing a long, firm commitment that lets a prime and its suppliers justify new buildings, tooling and hiring. Europe has the technology. What it has struggled to produce is a buyer that looks like that.
 
