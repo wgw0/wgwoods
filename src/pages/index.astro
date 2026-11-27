@@ -58,6 +58,9 @@ const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/$
 			<a href="/blog">All writing</a>
 		</div>
 		<PostList posts={rest.slice(0, 4)} />
+		<p class="more" data-link-location="home_more">
+			<a class="button" href="/blog">Read all writing <span aria-hidden="true">→</span></a>
+		</p>
 	</section>
 </Base>
 
@@ -101,6 +104,32 @@ const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/$
 	}
 	.section-head a {
 		font-size: var(--step--1);
+	}
+	.more {
+		margin-top: var(--space-10);
+		text-align: center;
+	}
+	.button {
+		display: inline-block;
+		padding: var(--space-3) var(--space-8);
+		border: 1px solid var(--ink);
+		border-radius: 999px;
+		color: var(--ink);
+		font-weight: 600;
+		text-decoration: none;
+		box-shadow: inset 0 -2px 0 var(--gold);
+		transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+	}
+	.button:hover {
+		background: var(--ink);
+		color: var(--canvas);
+	}
+	.button span {
+		display: inline-block;
+		transition: transform 150ms var(--ease-out);
+	}
+	.button:hover span {
+		transform: translateX(3px);
 	}
 
 	.briefing {

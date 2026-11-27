@@ -64,7 +64,7 @@ a value from one event can't carry over into the next.
 | `subscribe_interaction` | Visitor clicks into the Substack embed | `link_location` |
 
 `link_location` comes from the nearest `data-link-location` attribute (`header`, `footer`,
-`home_intro`, `home_latest`, `post_list`, `article_body`, `article_origin`, `article_footer`,
+`home_intro`, `home_latest`, `home_more`, `post_list`, `article_body`, `article_origin`, `article_footer`,
 `about_bio`, `about_experience`, `qr_page`), falling back to `header`, `footer` or `body`. Add the
 attribute to new sections to label their links.
 
