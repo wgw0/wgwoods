@@ -107,6 +107,21 @@
                     "value": "{{DLV - article_reading_minutes}}"
                   }
                 ]
+              },
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "traffic_type"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "{{DLV - traffic_type}}"
+                  }
+                ]
               }
             ]
           }
@@ -699,6 +714,30 @@
             "type": "TEMPLATE",
             "key": "value",
             "value": "G-NJHH35Z8FN"
+          }
+        ]
+      },
+      {
+        "accountId": "6407663102",
+        "containerId": "288543791",
+        "variableId": "21",
+        "name": "DLV - traffic_type",
+        "type": "v",
+        "parameter": [
+          {
+            "type": "INTEGER",
+            "key": "dataLayerVersion",
+            "value": "2"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "setDefaultValue",
+            "value": "false"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "name",
+            "value": "traffic_type"
           }
         ]
       }

@@ -45,8 +45,24 @@ No consent banner: GA4 sets cookies on first load. Add Consent Mode v2 and a ban
 | `article_title` | Post title (blog posts only; not sent to GA4, which has `page_title`) |
 | `article_publish_date` | `YYYY-MM-DD` (blog posts only) |
 | `article_reading_minutes` | Number (blog posts only) |
+| `traffic_type` | `internal` for our own visits (see below); absent otherwise |
 
 The GTM Google tag sends these as config parameters, so they go on every GA4 event from the page.
+
+## Internal traffic
+
+Our own visits are tagged `traffic_type: internal` and dropped by GA4's **Internal Traffic** data
+filter (Admin > Data collection > Data filters). Two ways a visit is marked:
+
+- **Per browser:** open any page with `?internal=1` (e.g. `https://wgwoods.co.uk/?internal=1`)
+  once in each browser and device you use. It's kept in localStorage (`wg_internal`), so it lasts
+  until site data is cleared; Safari drops it after about 7 days without a visit. `?internal=0`
+  undoes it. Anything not on wgwoods.co.uk (a localhost preview, say) is always internal.
+- **By network:** the GA4 Google tag's "Home network" internal traffic rule (Google tag settings >
+  Define internal traffic) matches the home IPv4 address and IPv6 /64 prefix. Update it if the
+  ISP changes the address; the browser flag still covers you if it does.
+
+Excluded data is gone for good, so leave the filter on only while this is how you want it.
 
 ## Events
 
@@ -73,7 +89,7 @@ GA4 enhanced measurement still runs on top (page views, scrolls, outbound clicks
 ## GTM
 
 - **GA4 - Google tag**: Initialization - All Pages. Config parameters: `content_group`, `page_type`,
-  `article_id`, `article_publish_date`, `article_reading_minutes`.
+  `article_id`, `article_publish_date`, `article_reading_minutes`, `traffic_type`.
 - **GA4 - Event - Site events**: event name `{{Event}}`, fired by **CE - Site events** (custom event,
   regex on the event names above). Sends every event param above; empty ones are dropped.
 - Variables: one `DLV - <key>` per dataLayer key, `Const - GA4 Measurement ID`.

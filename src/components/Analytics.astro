@@ -11,6 +11,7 @@ export type PageData = {
 	article_title?: string;
 	article_publish_date?: string;
 	article_reading_minutes?: number;
+	traffic_type?: 'internal';
 };
 
 interface Props {
@@ -27,6 +28,16 @@ const src = GTM_PATH ? `${GTM_PATH}/?id=` : 'https://www.googletagmanager.com/gt
 {
 	enabled && (
 		<script is:inline define:vars={{ gtmId: GTM_ID, page, src }}>
+			// Internal traffic: visit any page with ?internal=1 once per browser to mark it as ours
+			// (?internal=0 undoes it). Anything not on the live domain, e.g. a localhost preview, is
+			// always internal. GA4's Internal Traffic data filter drops hits with traffic_type=internal.
+			try {
+				var flag = new URLSearchParams(location.search).get('internal');
+				if (flag === '1') localStorage.setItem('wg_internal', '1');
+				if (flag === '0') localStorage.removeItem('wg_internal');
+				if (localStorage.getItem('wg_internal') === '1') page.traffic_type = 'internal';
+			} catch (e) {}
+			if (location.hostname !== 'wgwoods.co.uk') page.traffic_type = 'internal';
 			window.dataLayer = window.dataLayer || [];
 			window.dataLayer.push(page);
 			(function (w, d, s, l, i) {
