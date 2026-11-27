@@ -1,0 +1,43 @@
+# Publishes queued posts on their date.
+# Put a finished post in drafts/ with its future pubDate. Each morning this moves any
+# draft whose pubDate is today or earlier into src/content/blog and pushes to main,
+# which triggers the Cloudflare Pages deploy.
+name: Release scheduled posts
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # 07:00 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Move due drafts into the blog
+        id: move
+        run: |
+          today=$(date -u +%Y-%m-%d)
+          moved=0
+          shopt -s nullglob
+          for f in drafts/*.md; do
+            d=$(grep -m1 -E "^pubDate:" "$f" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+            if [ -n "$d" ] && [[ "$d" < "$today" || "$d" == "$today" ]]; then
+              git mv "$f" "src/content/blog/$(basename "$f")"
+              echo "Releasing $f ($d)"
+              moved=1
+            fi
+          done
+          echo "moved=$moved" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push
+        if: steps.move.outputs.moved == '1'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Release scheduled post(s) for $(date -u +%Y-%m-%d)"
+          git push
