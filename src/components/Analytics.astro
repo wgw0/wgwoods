@@ -40,6 +40,14 @@ const src = GTM_PATH ? `${GTM_PATH}/?id=` : 'https://www.googletagmanager.com/gt
 			if (location.hostname !== 'wgwoods.co.uk') page.traffic_type = 'internal';
 			window.dataLayer = window.dataLayer || [];
 			window.dataLayer.push(page);
+			// The same fields as a gtag 'set' command, which the GA4 Google tag applies to every event
+			// it sends, page_view and enhanced measurement included. GTM's own settings only reach
+			// the events its GA4 event tags send.
+			function gtag() {
+				window.dataLayer.push(arguments); // gtag only reads real arguments objects, not arrays
+			}
+			gtag('set', page);
+			gtag('set', 'send_page_view', false);
 			(function (w, d, s, l, i) {
 				w[l] = w[l] || [];
 				w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });

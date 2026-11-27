@@ -47,7 +47,11 @@ No consent banner: GA4 sets cookies on first load. Add Consent Mode v2 and a ban
 | `article_reading_minutes` | Number (blog posts only) |
 | `traffic_type` | `internal` for our own visits (see below); absent otherwise |
 
-The GTM Google tag sends these as config parameters, so they go on every GA4 event from the page.
+The same object is also pushed as `gtag('set', page)`, along with `gtag('set', 'send_page_view', false)`.
+The `set` is what puts `traffic_type` (as `tt`) on every hit, GA4's own enhanced measurement events
+included. Page view and site events get the other page fields from GTM's **GTES - Page data**
+variable (see GTM below). Fields in the Google tag's own configuration settings never reach GA4,
+which is why page data showed as "(not set)" before 27 Nov 2026.
 
 ## Internal traffic
 
@@ -88,11 +92,16 @@ GA4 enhanced measurement still runs on top (page views, scrolls, outbound clicks
 
 ## GTM
 
-- **GA4 - Google tag**: Initialization - All Pages. Config parameters: `content_group`, `page_type`,
-  `article_id`, `article_publish_date`, `article_reading_minutes`, `traffic_type`.
+- **GA4 - Google tag**: Initialization - All Pages. Loads GA4; `send_page_view` is false (the page
+  also sets that through `gtag('set')`, which is the one GA4 honours), so it sends no page view of
+  its own.
+- **GA4 - Event - page_view**: All Pages. Sends `page_view` with **GTES - Page data**.
 - **GA4 - Event - Site events**: event name `{{Event}}`, fired by **CE - Site events** (custom event,
-  regex on the event names above). Sends every event param above; empty ones are dropped.
-- Variables: one `DLV - <key>` per dataLayer key, `Const - GA4 Measurement ID`.
+  regex on the event names above). Sends every event param above plus **GTES - Page data**; empty
+  ones are dropped.
+- Variables: one `DLV - <key>` per dataLayer key, `Const - GA4 Measurement ID`, and **GTES - Page
+  data** (a Google Tag: Event Settings variable with `content_group`, `page_type`, the `article_*`
+  fields and `traffic_type`).
 
 To add an event: push it with `track()` in `analytics.ts`, add its name to the trigger regex, and
 add any new params to the event tag and a `DLV -` variable.
