@@ -112,17 +112,17 @@ const cardImage = latest.data.heroImage ?? (firstImagePath ? images[`../assets/$
 	.button {
 		display: inline-block;
 		padding: var(--space-3) var(--space-8);
-		border: 1px solid var(--ink);
 		border-radius: 999px;
-		color: var(--ink);
+		background: var(--gold);
+		color: #0f172a; /* navy on gold in both themes */
 		font-weight: 600;
 		text-decoration: none;
-		box-shadow: inset 0 -2px 0 var(--gold);
-		transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out);
+		transition: filter 150ms var(--ease-out), transform 150ms var(--ease-out);
 	}
 	.button:hover {
-		background: var(--ink);
-		color: var(--canvas);
+		color: #0f172a;
+		filter: brightness(1.08);
+		transform: translateY(-1px);
 	}
 	.button span {
 		display: inline-block;
