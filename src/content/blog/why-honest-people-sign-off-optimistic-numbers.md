@@ -10,13 +10,17 @@ That's roughly what the UK's National Armaments Director, Rupert Pearce, describ
 
 He was equally clear that this isn't about carelessness. "People aren't profligate with other people's money in defence. I've not seen that." So the question is what kind of system makes sensible, honest people produce numbers they don't fully believe.
 
+![The long pale stone frontage of the Ministry of Defence Main Building behind a row of bare trees, seen across the River Thames](../../assets/blog/why-honest-people-sign-off-optimistic-numbers/mod-main-building-from-thames.jpg)
+
+*The Ministry of Defence Main Building in Whitehall, the MoD's headquarters, seen across the Thames in March 2014. Photo by ArildV ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)), via Wikimedia Commons.*
+
 ### What the auditors found
 
 The National Audit Office's [report on the Defence Investment Plan](https://www.nao.org.uk/reports/affordability-of-the-defence-investment-plan/), published on 25 November, puts the same thing in more formal language. New internal guidance says some projects can only start "when funding for the whole project was available". The NAO says this was "to address a culture within the MoD whereby it approved business cases with a view that affordability would be resolved later."
 
 The report also notes that in some previous years the MoD set extra efficiency targets "shortly before finalising its spending plans in order to make them appear affordable", even when those targets weren't realistic. The MoD itself has recognised that when it needed to close affordability gaps in the past, it made "overoptimistic assumptions about its ability to reduce costs".
 
-None of this is new. The NAO found the 2020 to 2030 Equipment Plan unaffordable for the fourth year running, and the 2023 to 2033 plan showed [forecast costs of £305.5 billion against a £288.6 billion budget](https://www.nao.org.uk/reports/equipment-plan-2023-to-2033/). What's changed is that the people running the system are now saying out loud why it happens.
+None of this is new. The NAO found the [2020 to 2030 Equipment Plan unaffordable for the fourth year running](https://www.nao.org.uk/reports/equipment-plan-2020-2030/), and the 2023 to 2033 plan showed [forecast costs of £305.5 billion against a £288.6 billion budget](https://www.nao.org.uk/reports/equipment-plan-2023-to-2033/). What's changed is that the people running the system are now saying out loud why it happens.
 
 ### Optimism, or something more deliberate?
 
@@ -32,6 +36,10 @@ There's an old management paper by Steven Kerr with the excellent title ["On the
 
 Applied here, defence says it wants realistic costings. But the reward for a realistic costing, under the old approach, was often that your programme didn't get approved, while the cost of an optimistic one arrived years later, usually for someone else. Pearce himself pointed at that timing when he declined to criticise past decisions on Ajax, saying the people involved "did the best they could in the environment in which they were making decisions". His description of what went wrong there is telling too: the system "kind of stopped when the vehicle was delivered out of the factory", so training and bringing the vehicle into service had to be worked out afterwards. That's the same pattern in a different place. Whatever wasn't counted at approval became somebody else's problem later, which is the kind of gap I wrote about in my post on [sociotechnical systems](/blog/an-introduction-to-sociotechnical/).
 
+![A grey tracked Ajax armoured vehicle with two crew in the turret, driving across wet sandy ground in front of pine trees](../../assets/blog/why-honest-people-sign-off-optimistic-numbers/ajax-armoured-vehicle.jpg)
+
+*A British Army Ajax armoured vehicle, October 2024. Getting the vehicle out of the factory was only part of the job; training crews and bringing it into service came after. Photo by Airwolfhound ([CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/)), via Wikimedia Commons.*
+
 ### Changing the rules
 
 What I find more encouraging than the admission is that the two fixes the MoD describes are aimed at the system itself.
@@ -46,7 +54,7 @@ The Treasury has long had a formal tool for this. Its [Green Book guidance on op
 
 There are reasons to be cautious. The same committee session heard that fifteen major programmes are currently rated red, and Pearce said the position had ["got slightly worse, actually"](https://ukdefencejournal.org.uk/all-red-defence-programmes-can-be-recovered-says-arms-chief/) since he took up the post, though he argued all of them were recoverable. The NAO report also notes that the plan assumes about 20% of project costs won't be spent as planned, and warns that pushing spending into later years risks a "bow wave" after 2030. And some of the savings measures added late in the process had no detailed delivery plans when the plan was published. The same patterns don't disappear because a new rule has been written.
 
-There's also a fair counterargument to the whole idea of stamping out optimism. In 1967 the economist Albert Hirschman described what he called the "Hiding Hand": the idea that if planners could see every difficulty in advance, many worthwhile projects would never be started, and that people often find creative ways through problems they didn't foresee. If defence costed everything with complete pessimism, some capabilities that turned out to be valuable might never have begun. Flyvbjerg and Cass Sunstein later [tested Hirschman's idea](https://arxiv.org/abs/1509.01526) against a much larger set of projects and concluded that the harmful version, where optimism hides both higher costs and lower benefits, is far more common. Even so, I think Hirschman's point has something to it. The aim should be honesty about uncertainty, while still being willing to start things that are uncertain.
+There's also a fair counterargument to the whole idea of stamping out optimism. In 1967 the economist Albert Hirschman described what he called the ["Hiding Hand"](https://www.brookings.edu/books/development-projects-observed-2/): the idea that if planners could see every difficulty in advance, many worthwhile projects would never be started, and that people often find creative ways through problems they didn't foresee. If defence costed everything with complete pessimism, some capabilities that turned out to be valuable might never have begun. Flyvbjerg and Cass Sunstein later [tested Hirschman's idea](https://arxiv.org/abs/1509.01526) against a much larger set of projects and concluded that the harmful version, where optimism hides both higher costs and lower benefits, is far more common. Even so, I think Hirschman's point has something to it. The aim should be honesty about uncertainty, while still being willing to start things that are uncertain.
 
 ### What I take from it
 

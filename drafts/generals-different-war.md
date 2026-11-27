@@ -8,6 +8,10 @@ What did you learn in your first ten years of work that you still assume is true
 
 I was thinking about that while reading an [interview with Air Chief Marshal Sir Johnny Stringer](https://ukdefencejournal.org.uk/stringer-wants-nato-to-train-leaders-for-the-digital-age/), NATO's Deputy Supreme Allied Commander Europe, given to the UK Defence Journal at the NATO Edge 26 conference in İzmir. His argument was about exactly this, applied to the people at the top of the alliance.
 
+![An RAF officer in a desert flying suit and side cap walks past a line of applauding service personnel outside a headquarters building](../../assets/blog/generals-different-war/stringer-83-expeditionary-air-group-al-udeid-2017.jpg)
+
+*Then Air Commodore Johnny Stringer (right) at a change of command for No. 83 Expeditionary Air Group, the RAF's air component in the Middle East, at Al Udeid Air Base, Qatar, October 2017. US Air Force photo by Staff Sgt. Patrick P. Evenson (public domain), via Wikimedia Commons.*
+
 ### What a career teaches you
 
 Stringer's point was that a typical 50-year-old general, admiral, air marshal or senior civil servant in NATO has spent 30 years shaped first by the post-Cold War peace dividend and then by two decades of counter-insurgency in places like Iraq and Afghanistan. The fighting was bloody, he said, and a lot of people were lost. "But we owned space. We owned cyber. We owned air. That's not the case now."
@@ -18,9 +22,17 @@ Management research has looked at this for a long time. Donald Hambrick and Phyl
 
 Apply that to Stringer's 50-year-olds. If your formative years were spent in campaigns where the air was uncontested and the networks were yours, then contested space and jammed communications aren't part of your instinctive picture of war. You can know about them perfectly well without them being the first thing you think of.
 
+![A line of British soldiers in helmets and body armour walking along a dusty track beside coiled razor wire, with mountains on the horizon](../../assets/blog/generals-different-war/british-patrol-nahr-e-saraj-helmand-2012.jpg)
+
+*Soldiers from B Company, 1st Battalion the Yorkshire Regiment, on foot patrol in Nahr-e Seraj, Helmand Province, January 2012. This was the kind of campaign that formed today's senior officers. Photo by Sgt Wes Calder RLC, MOD (Crown copyright, [Open Government Licence v1.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/1/)), via Wikimedia Commons.*
+
 ### Ambition and technology
 
 On stage earlier in the day, Stringer had used the history of air power to argue that early military aviation was a story of ambition and imagination running ahead of the technology, until the technology overtook it. In the digital space, he said, commanders need to make sure their ambition stays in front. Asked whether it was in front yet, he said that in some areas the technology is currently ahead, though this was "not necessarily doom and gloom".
+
+![Black and white photo of a row of early pusher biplanes on a grass airfield, with ground crew, pilots in leather coats and bell tents behind](../../assets/blog/generals-different-war/rfc-dh2-fighters-beauval-1916.jpg)
+
+*Airco DH.2 fighters of No. 32 Squadron, Royal Flying Corps, at Beauval aerodrome on the Western Front, 1916. Photo by John Warwick Brooke, Imperial War Museums Q 11897 (public domain), via Wikimedia Commons.*
 
 Put that next to his point about careers. At a conference where hundreds of companies were showing what is already possible, the constraint Stringer described sat with the buyers, in what senior leaders know to ask for. Industry can offer a capability, but someone has to recognise it as an answer to a problem they actually have, and then put their name to a requirement for it. In Stringer's account, that person's sense of what's possible was often formed in a different war.
 

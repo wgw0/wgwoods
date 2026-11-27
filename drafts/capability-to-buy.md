@@ -12,6 +12,10 @@ I kept thinking of that while reading the National Audit Office's report on the 
 
 The Defence Investment Plan sets out about £298 billion of spending over the four years to 2029-30. Much of the equipment side runs through the National Armaments Director Group (NADG), which the NAO describes as bringing together "several previously separate organisations which deliver and support defence equipment and infrastructure". Defence Equipment and Support is the best known of them.
 
+![A modern office building with a glass stair tower beside a reed-fringed pond, with a cable-stayed footbridge behind](../../assets/blog/capability-to-buy/mod-abbey-wood-bristol.jpg)
+
+*MoD Abbey Wood in Filton, north Bristol, in September 2014. The site is the headquarters of Defence Equipment and Support. Photo by Derek Harper ([CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/)), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:MoD_Procurement_HQ,_Abbey_Wood_-_geograph.org.uk_-_4195356.jpg).*
+
 During the planning process NADG cut £12.5 billion from its own four-year cost forecasts, so that they matched what it thought it and industry could actually deliver. Then, shortly before the plan was finished, it [warned](https://www.nao.org.uk/wp-content/uploads/2026/11/Affordability-of-the-defence-investment-plan.pdf) that it was "already operating unsustainably due to the imbalance between programme scope and delivery capacity". It had an 18% shortfall against the capacity it needed and judged it had to get that down to 10%. In the NAO's words, "planned reductions to its workforce would make this problem significantly worse." NADG's own options were to spend more on contractors in the short term or to stop work on several important programmes, on top of those the plan had already paused or cancelled.
 
 So the organisation responsible for buying the kit has said, in writing, that it doesn't have enough people to do what is already on its books.
@@ -19,6 +23,10 @@ So the organisation responsible for buying the kit has said, in writing, that it
 ### What the buying actually involves
 
 The work looks a lot like the renovation manager's job, at a much larger scale. Someone has to turn a military need into a requirement a supplier can price. Commercial staff have to design and negotiate the contract, then manage it for years. Project managers hold the schedule and the risks together. Engineers have to check that what the supplier delivers is safe and does what was asked, which in defence can mean building the safety case for a ship or an aircraft before it enters service.
+
+![A grey frigate sitting on a large submersible barge beside a shipyard on a river, seen from above at sunrise](../../assets/blog/capability-to-buy/hms-glasgow-type-26-govan.jpg)
+
+*HMS Glasgow, the first Type 26 frigate, on a launch barge at BAE Systems' Govan yard on the Clyde in November 2022, about to be towed downriver for float-off. Getting a ship like this from contract to safe, accepted warship is the work the buyers manage. Photo by Ian Dick ([CC BY 2.0](https://creativecommons.org/licenses/by/2.0/)), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:HMS_Glasgow_(52567292390).jpg).*
 
 None of that can be switched on quickly. A good commercial lead on a complex programme has usually spent years learning how a particular supplier and its regulators behave. Cohen and Levinthal called the organisational version of this [absorptive capacity](https://doi.org/10.2307/2393553): an organisation can only use what it already has the knowledge to understand. A procurement team without the right people can't absorb a larger programme just because the budget line has grown.
 
@@ -30,7 +38,7 @@ The part of the report I found most interesting is a single paragraph about beha
 
 The logic is easy to follow. The target counts civil service costs. A uniformed officer doing the same desk job doesn't appear in that count, so the measured number goes down while the total cost to defence goes up. The NAO notes that this also conflicts with the MoD's own aim of moving military personnel out of administrative roles, such as HR, and into front-line ones.
 
-This is Goodhart's law, usually paraphrased as "when a measure becomes a target, it ceases to be a good measure". The social scientist Donald Campbell put a sharper version in [1979](https://doi.org/10.1016/0149-7189(79)90048-X): the more a quantitative indicator is used for decisions, the more it gets corrupted and the more it distorts the activity it was meant to monitor. Nobody in this story needs to be acting in bad faith. A manager told to reduce civil service costs, who still needs the work done, will find a way to get it done that the target doesn't see. The NAO says as much in its own words: "there is a risk that the efficiency measures could incentivise behaviours that help achieve targets without delivering underlying efficiencies."
+This is Goodhart's law, usually paraphrased as "[when a measure becomes a target, it ceases to be a good measure](https://doi.org/10.1017/S1062798700002660)". The social scientist Donald Campbell put a sharper version in [1979](https://doi.org/10.1016/0149-7189(79)90048-X): the more a quantitative indicator is used for decisions, the more it gets corrupted and the more it distorts the activity it was meant to monitor. Nobody in this story needs to be acting in bad faith. A manager told to reduce civil service costs, who still needs the work done, will find a way to get it done that the target doesn't see. The NAO says as much in its own words: "there is a risk that the efficiency measures could incentivise behaviours that help achieve targets without delivering underlying efficiencies."
 
 ### The case for targets
 

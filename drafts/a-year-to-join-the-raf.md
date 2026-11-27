@@ -10,11 +10,19 @@ In a [written answer on 8 September](https://questions-statements.parliament.uk/
 
 The question had a second part. It also asked how long recruits wait between their medical assessment and the start of training. The MOD couldn't say, because that data is "not held centrally" in a form that can be compared across the three services. I found that half of the answer more interesting than the headline number.
 
+![A Victorian brick building behind a park, with Army and Royal Air Force signs over the entrance](../../assets/blog/a-year-to-join-the-raf/armed-forces-careers-office-chatham.jpg)
+
+*The Armed Forces Careers Office on Dock Road, Chatham, in September 2025, one of the places an application can begin. Photo by OathOn ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Armed_Forces_Career_Office_on_Dock_Road_viewed_from_The_Paddock_park,_Chatham,_Kent,_England,_29_September_2025.jpg).*
+
 ### Where the year goes
 
 The answer blames medical and security checks, the availability of specialist training places, and candidate choice. An [earlier answer from February 2025](https://questions-statements.parliament.uk/written-questions/detail/2025-02-10/30179) was more specific: waiting for GP records, medical deferment for candidates who need time to get fit, lining up basic training with the trade training that follows it, and the candidate's own job and housing situation. It also noted that Navy and RAF recruits need Security Check clearance before they join and Army recruits don't, which is one reason the MOD warns against comparing the services directly.
 
 Each of those is a separate queue with a separate owner. GP records come from the NHS. Vetting runs to its own timetable, and training places depend on course dates planned long in advance.
+
+![RAF personnel lined up in ranks on a large parade square, with a Tornado jet and a brick building behind them and wooded hills beyond](../../assets/blog/a-year-to-join-the-raf/raf-halton-graduation-parade-2015.jpg)
+
+*A graduation parade at RAF Halton in Buckinghamshire, where RAF recruits do basic training, April 2015. The 356 days are counted up to the first day here. Photo by Richard Croft ([CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/)), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Graduation_Parade_(geograph_4421632).jpg).*
 
 Eliyahu Goldratt's *The Goal* (1984) explains why that matters. The output of any chain of dependent steps is set by its slowest step, which he called the constraint. Speeding up any other step only moves the queue. His first instruction is to find the constraint, because effort spent anywhere else is wasted.
 
@@ -47,6 +55,10 @@ One thing the figures can't separate is worth knowing. RAF intake rose [37% in t
 There is a fair argument that none of this is a crisis. Medical and security standards exist for good reasons, especially for people who will work on aircraft or with classified material. Many applicants also choose to defer, to finish a course or work their notice, and that isn't a system failure.
 
 The bigger point is that the overall numbers are improving. In the year to June 2026, 14,500 people joined the regular forces and 13,050 left. On [17 November](https://questions-statements.parliament.uk/written-questions/detail/2026-11-04/40916) the minister said intake now exceeds outflow for the first time in several years. The RAF's regular strength grew by 840, more than the Navy (440) and the Army (170) combined. The service with the longest wait grew the most.
+
+![A senior RAF officer in ceremonial dress talks to a smiling recruit holding a rifle with fixed bayonet, as other recruits stand in line](../../assets/blog/a-year-to-join-the-raf/raf-halton-graduation-parade-inspection-2019.jpg)
+
+*Air Commodore Frank Clifford inspects recruits at a graduation parade at RAF Halton, April 2019. Photo by Luka Waycott, RAF (Crown copyright, [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Frank_Clifford_RAF_Halton_.jpg).*
 
 I take that seriously. But intake measures what the system produces, and the wait measures what each candidate goes through. The first can improve while the second gets worse, and the cost of the gap shows up in people who don't appear in either number.
 
