@@ -2,6 +2,7 @@
 title: 'Why do honest people sign off numbers they don''t believe?'
 description: 'Over-optimistic defence costings are less about individuals than about what the approval system rewards'
 pubDate: '2026-11-27'
+originalUrl: 'https://wgw0.substack.com/p/why-do-honest-people-sign-off-numbers'
 ---
 
 Imagine you want a new kitchen and you've told your partner you'll only go ahead if it costs under £15,000. You get three quotes. Two builders come in at £19,000 and one at £14,500. You both know, really, that the cheap one will end up nearer £19,000 once they've opened up the walls. You pick him anyway, because his is the only quote that gets the job approved.
