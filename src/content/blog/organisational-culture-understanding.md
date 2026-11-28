@@ -35,6 +35,8 @@ Knowing the details of an organisation’s culture is like having a map to navig
 
 Feeling like you fit in with an organisation’s culture makes you more likely to enjoy your work, feel fulfilled and be successful in your role [2]. When you share the same values, goals, and work behaviours as your colleagues, it’s easier to communicate and collaborate. This creates a positive work environment where you feel supported and motivated to contribute your best work. These are important factors to your mental well-being and job satisfaction.
 
+Culture also decides whether new tools and processes get used the way they were intended. That is the central point of [sociotechnical systems theory](/blog/an-introduction-to-sociotechnical/): the people side of an organisation and its technology have to be designed together, or the technology underdelivers.
+
 ---
 
 ### How does it impact you?

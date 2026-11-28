@@ -1,6 +1,6 @@
 ---
-title: 'An Introduction to Sociotechnical Systems Theory'
-description: 'The core concepts of sociotechnical systems theory, how it can be applied to an organisation, and how it improves performance.'
+title: 'What Is a Sociotechnical System? An Introduction to STS Theory'
+description: 'What a sociotechnical system is, where STS theory came from, its core principles, and how to apply it when an organisation changes its technology or structure.'
 pubDate: '2026-07-27'
 originalUrl: 'https://wgw0.substack.com/p/an-introduction-to-sociotechnical'
 ---
@@ -9,13 +9,19 @@ originalUrl: 'https://wgw0.substack.com/p/an-introduction-to-sociotechnical'
 
 In my second year of university I undertook a module called ‘Business Systems Analysis’. This module had me analyse the work system of an employee in an organisation, and the methodology was based on a sociotechnical approach. This experience sparked my interest in understanding how organisations function and what drives their success. Since then, I’ve been looking further into sociotechnical theory: exploring its foundations, how it operates as a framework, and how it can be applied more broadly to improve organisational systems. In this article I’ll introduce the core concepts of STS, discuss how it can be applied to an organisation and how this improves their performance.
 
+### What is a sociotechnical system?
+
+A sociotechnical system is any place where people and technology have to work together to get something done. A hospital ward is one: the beds, monitors and patient records system on one side, and the nurses, doctors, shift patterns and the way they hand over to each other on the other. Change the records system and you have also changed how the nurses work, whether you planned to or not.
+
+The idea comes from coal mining. In 1951 Eric Trist and Ken Bamforth [studied British pits](https://doi.org/10.1177/001872675100400101) that had moved to a mechanised "longwall" method of cutting coal. The new machinery broke up the small, self-managing teams the miners had worked in, and the expected gains didn't come: productivity stayed flat while absenteeism went up. Trist and Bamforth traced the problem to how the work had been reorganised around the machines. Sociotechnical systems theory grew out of that finding, and it is about designing the technology and the way people work together.
+
 ![Using socio-technical systems theory to study the health information  management workforce in Australian acute hospitals | Social Theory & Health  | Springer Nature Link](../../assets/blog/an-introduction-to-sociotechnical/image-1.png)
 
 ### Introduction to STS Theory
 
 Sociotechnical Systems (STS) Theory is a framework that aids in the understanding and designing of organisational systems. It focuses on the interdependence of two critical subsystems within organisations: the ‘Technical System’ and the ‘Social System’. ‘Social technical’, definitively, means that technology should not be allowed to be the controlling factor when new work systems are implemented. STS theory emerged in the 1950s through the work of Eric Trist, Ken Bamforth and Fred Emery at the Tavistock Institute through working with miners and how they interact and experience their work.
 
-The Technical System includes tools, technologies, workflows, and processes used to achieve organisational objectives, while the Social System encompasses the people within the organisation, their relationships, culture, and roles. **STS theory describes that neither system can operate effectively without considering the other, as optimising one at the expense of the other will lead to failure.** The ultimate goal is to design systems that marry technical efficiency with human well-being, improving both organisational performance and employee satisfaction.
+The Technical System includes tools, technologies, workflows, and processes used to achieve organisational objectives, while the Social System encompasses the people within the organisation, their relationships, [culture](/blog/organisational-culture-understanding/), and roles. **STS theory describes that neither system can operate effectively without considering the other, as optimising one at the expense of the other will lead to failure.** The ultimate goal is to design systems that marry technical efficiency with human well-being, improving both organisational performance and employee satisfaction.
 
 ---
 
